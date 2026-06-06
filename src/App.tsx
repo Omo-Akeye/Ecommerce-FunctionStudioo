@@ -4,76 +4,57 @@ import bgImage from './assets/bg.png';
 import bg2 from './assets/bg2.png';
 import logo from './assets/logo.png';
 
-const Hotspot = ({
+const ItemTooltip = ({
   top,
   left,
   alignRight = false,
+  isActive,
+  isHovered,
   onAddToCart,
-  onClick,
-  onHover,
-  onLeave,
+  onClose,
 }: {
   top: string;
   left: string;
   alignRight?: boolean;
+  isActive: boolean;
+  isHovered: boolean;
   onAddToCart: () => void;
-  onClick: (active: boolean) => void;
-  onHover?: () => void;
-  onLeave?: () => void;
+  onClose: () => void;
 }) => {
-  const [isActive, setIsActive] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <div
-      className="absolute z-20"
+      className="absolute z-20 pointer-events-none"
       style={{ top, left }}
-      onClick={() => {
-        const newActive = !isActive;
-        setIsActive(newActive);
-        onClick(newActive);
-      }}
-      onMouseEnter={() => {
-        setIsHovered(true);
-        onHover?.();
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        onLeave?.();
-      }}
     >
-      {/* Pulsing Dot */}
-      <div className="relative flex items-center justify-center cursor-pointer group">
-        <div className="absolute w-8 h-8 bg-yellow-400 rounded-full opacity-40 animate-ping"></div>
-        <div className="relative w-4 h-4 bg-white border-2 border-yellow-400 rounded-full shadow-lg transition-transform duration-300 group-hover:scale-125"></div>
-
-        {/* Add to Cart Tooltip */}
-        <AnimatePresence>
-          {(isActive || isHovered) && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, x: alignRight ? 16 : -16, y: '-50%' }}
-              animate={{ opacity: 1, scale: 1, x: alignRight ? 24 : -24, y: '-50%' }}
-              exit={{ opacity: 0, scale: 0.9, x: alignRight ? 16 : -16, y: '-50%' }}
-              transition={{ duration: 0.2 }}
-              className={`absolute top-1/2 w-38.75 bg-[#0000008F] backdrop-blur-[7.61px] text-black p-4 rounded-[57px] ${alignRight ? 'left-4' : 'right-4'
-                }`}
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onAddToCart();
-                  setIsActive(false);
-                  setIsHovered(false);
-                }}
-                className="w-full  text-white text-[10px] tracking-wider font-bold py-2  transition-colors duration-200 cursor-pointer">
-                ADD TO CART
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      {/* Add to Cart Tooltip */}
+      <AnimatePresence>
+        {(isActive || isHovered) && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, x: alignRight ? 16 : -16, y: '-50%' }}
+            animate={{ opacity: 1, scale: 1, x: alignRight ? 24 : -24, y: '-50%' }}
+            exit={{ opacity: 0, scale: 0.9, x: alignRight ? 16 : -16, y: '-50%' }}
+            transition={{ duration: 0.2 }}
+            className={`absolute top-1/2 w-38.75 bg-[#0000008F] backdrop-blur-[7.61px] text-black p-4 rounded-[57px] pointer-events-auto ${alignRight ? 'left-4' : 'right-4'
+              }`}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart();
+                onClose();
+              }}
+              className="w-full text-white text-[10px] tracking-wider font-bold py-2 transition-colors duration-200 cursor-pointer">
+              ADD TO CART
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
+};
+
+const getPointsString = (points: { x: number; y: number }[], isLeft: boolean) => {
+  return points.map(pt => `${isLeft ? 100 - pt.x : pt.x},${pt.y}`).join(' ');
 };
 
 // Updated GrainEffect component to match bg-grain.html exactly
@@ -202,6 +183,225 @@ const App = () => {
   // Seam position based on split state
   const splitPercent = isSplit ? 50 : defaultSplit;
 
+  // Polygon Coordinates and Edit States
+  const [polygons, setPolygons] = useState<{ [key: string]: { x: number; y: number }[] }>({
+ 
+  "chair": [
+    {
+      "x": 36.4,
+      "y": 82
+    },
+    {
+      "x": 37.2,
+      "y": 59.1
+    },
+    {
+      "x": 49.6,
+      "y": 45.1
+    },
+    {
+      "x": 65.1,
+      "y": 45.7
+    },
+    {
+      "x": 64.8,
+      "y": 58.5
+    },
+    {
+      "x": 63.3,
+      "y": 73.2
+    },
+    {
+      "x": 63.6,
+      "y": 83.3
+    },
+    {
+      "x": 63.6,
+      "y": 83.3
+    }
+  ],
+  "vase": [
+    {
+      "x": 24.4,
+      "y": 26.3
+    },
+    {
+      "x": 35.2,
+      "y": 28.3
+    },
+    {
+      "x": 34,
+      "y": 58
+    },
+    {
+      "x": 34.1,
+      "y": 55.7
+    },
+    {
+      "x": 33.6,
+      "y": 79.3
+    },
+    {
+      "x": 27.5,
+      "y": 78.5
+    },
+    {
+      "x": 26.9,
+      "y": 55.1
+    },
+    {
+      "x": 31,
+      "y": 58
+    },
+    {
+      "x": 24.4,
+      "y": 26.3
+    },
+    {
+      "x": 35.2,
+      "y": 28.3
+    },
+    {
+      "x": 27.5,
+      "y": 78.5
+    }
+  ],
+  "frame": [
+    {
+      "x": 36.4,
+      "y": 4
+    },
+    {
+      "x": 54.5,
+      "y": 3.8
+    },
+    {
+      "x": 54.6,
+      "y": 38.6
+    },
+    {
+      "x": 36.7,
+      "y": 40.3
+    },
+    {
+      "x": 36.3,
+      "y": 14.3
+    },
+    {
+      "x": 36.7,
+      "y": 40.3
+    }
+  ],
+  "table": [
+    {
+      "x": 0,
+      "y": 54
+    },
+    {
+      "x": 22.7,
+      "y": 54.4
+    },
+    {
+      "x": 22.6,
+      "y": 73.9
+    },
+    {
+      "x": 0,
+      "y": 73.5
+    }
+  ]
+
+
+  });
+  const [isEditingPolygon, setIsEditingPolygon] = useState(false);
+  const [selectedEditItem, setSelectedEditItem] = useState<string>('chair');
+
+  // Mouse / SVG interaction handlers
+  const handleSvgClick = (e: React.MouseEvent<SVGSVGElement>, isLeftPanel: boolean) => {
+    if (!isEditingPolygon || !selectedEditItem) return;
+    
+    // If we clicked directly on a handle circle, do not add a point
+    if ((e.target as SVGElement).tagName === 'circle') return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    let x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    if (isLeftPanel) {
+      x = 100 - x;
+    }
+
+    setPolygons((prev) => {
+      const currentPoints = prev[selectedEditItem] || [];
+      return {
+        ...prev,
+        [selectedEditItem]: [
+          ...currentPoints,
+          { x: parseFloat(x.toFixed(1)), y: parseFloat(y.toFixed(1)) },
+        ],
+      };
+    });
+  };
+
+  const handleHandleMouseDown = (
+    e: React.MouseEvent<SVGCircleElement>,
+    itemId: string,
+    pointIndex: number,
+    isLeftPanel: boolean
+  ) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const svgElement = e.currentTarget.ownerSVGElement;
+    if (!svgElement) return;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const rect = svgElement.getBoundingClientRect();
+      let x = ((moveEvent.clientX - rect.left) / rect.width) * 100;
+      let y = ((moveEvent.clientY - rect.top) / rect.height) * 100;
+
+      x = Math.max(0, Math.min(100, x));
+      y = Math.max(0, Math.min(100, y));
+
+      if (isLeftPanel) {
+        x = 100 - x;
+      }
+
+      setPolygons((prev) => {
+        const updated = [...(prev[itemId] || [])];
+        updated[pointIndex] = { x: parseFloat(x.toFixed(1)), y: parseFloat(y.toFixed(1)) };
+        return {
+          ...prev,
+          [itemId]: updated,
+        };
+      });
+    };
+
+    const handleMouseUp = () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleDeletePoint = (itemId: string, index: number) => {
+    setPolygons((prev) => {
+      const updated = [...(prev[itemId] || [])];
+      updated.splice(index, 1);
+      return {
+        ...prev,
+        [itemId]: updated,
+      };
+    });
+  };
+
+  const handleBackgroundClick = () => {
+    if (isEditingPolygon) return;
+    setSelectedItem(null);
+  };
+
   // Toggle debug panel with 'd' key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -214,14 +414,13 @@ const App = () => {
   }, []);
 
   return (
-    <div className="relative w-screen h-screen bg-[#060606] font-sans overflow-hidden select-none">
+    <div className="relative w-screen h-screen bg-[#060606] font-sans overflow-hidden select-none" onClick={handleBackgroundClick}>
 
       {/* Background Panels */}
       <div className="absolute inset-0 z-0">
 
         {/* Left Panel Container (0% to splitPercent%) */}
         <motion.div
-          // className="absolute left-0 top-0 h-full overflow-hidden border-r border-yellow-400/20"
           className="absolute left-0 top-0 h-full overflow-hidden"
           animate={{ width: `${splitPercent}%` }}
           transition={{ type: 'spring', stiffness: 80, damping: 20 }}
@@ -239,42 +438,122 @@ const App = () => {
             {/* Grain Overlay - Sized directly to this specific div */}
             <GrainEffect />
 
-            {/* Mirroring Hotspots on Left Image */}
-            <Hotspot
+            {/* SVG Polygon Hitbox Overlay for Left Panel */}
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-auto z-10"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              onClick={(e) => handleSvgClick(e, true)}
+            >
+              {Object.entries(polygons).map(([id, points]) => {
+                const pointsStr = getPointsString(points, true);
+                return (
+                  <polygon
+                    key={id}
+                    points={pointsStr}
+                    className="cursor-pointer"
+                    style={{
+                      fill: isEditingPolygon && selectedEditItem === id
+                        ? 'rgba(234, 179, 8, 0.4)'
+                        : isEditingPolygon
+                        ? 'rgba(234, 179, 8, 0.15)'
+                        : 'transparent',
+                      stroke: isEditingPolygon
+                        ? selectedEditItem === id
+                          ? '#feec04'
+                          : 'rgba(234, 179, 8, 0.6)'
+                        : 'transparent',
+                      strokeWidth: isEditingPolygon ? 0.4 : 0,
+                      strokeDasharray: isEditingPolygon ? '1 1' : 'none',
+                    }}
+                    onMouseEnter={() => {
+                      if (!isEditingPolygon) {
+                        setHoveredItem(items[id as keyof typeof items]);
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (!isEditingPolygon) {
+                        setHoveredItem(null);
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isEditingPolygon) {
+                        setSelectedEditItem(id);
+                      } else {
+                        const isCurrentlyActive = selectedItem?.id === id;
+                        setSelectedItem(isCurrentlyActive ? null : items[id as keyof typeof items]);
+                      }
+                    }}
+                  />
+                );
+              })}
+
+              {/* Drag handles for editing polygon - Left panel */}
+              {isEditingPolygon && selectedEditItem && (
+                <>
+                  {polygons[selectedEditItem]?.map((pt, index) => {
+                    const handleX = 100 - pt.x;
+                    const handleY = pt.y;
+
+                    return (
+                      <circle
+                        key={index}
+                        cx={handleX}
+                        cy={handleY}
+                        r="0.8"
+                        fill="#feec04"
+                        stroke="#000"
+                        strokeWidth="0.15"
+                        className="cursor-move hover:scale-125 transition-transform duration-150"
+                        onMouseDown={(e) => handleHandleMouseDown(e, selectedEditItem, index, true)}
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          handleDeletePoint(selectedEditItem, index);
+                        }}
+                      />
+                    );
+                  })}
+                </>
+              )}
+            </svg>
+
+            {/* Tooltips on Left Image */}
+            <ItemTooltip
               top={`${chairY}%`}
               left={`${100 - chairX}%`}
               alignRight={true}
-              onClick={(active) => setSelectedItem(active ? items.chair : null)}
-              onHover={() => setHoveredItem(items.chair)}
-              onLeave={() => setHoveredItem(null)}
+              isActive={selectedItem?.id === 'chair'}
+              isHovered={hoveredItem?.id === 'chair'}
               onAddToCart={() => setCartCount(c => c + 1)}
+              onClose={() => setSelectedItem(null)}
             />
-            <Hotspot
+            <ItemTooltip
               top={`${vaseY}%`}
               left={`${100 - vaseX}%`}
               alignRight={true}
-              onClick={(active) => setSelectedItem(active ? items.vase : null)}
-              onHover={() => setHoveredItem(items.vase)}
-              onLeave={() => setHoveredItem(null)}
+              isActive={selectedItem?.id === 'vase'}
+              isHovered={hoveredItem?.id === 'vase'}
               onAddToCart={() => setCartCount(c => c + 1)}
+              onClose={() => setSelectedItem(null)}
             />
-            <Hotspot
+            <ItemTooltip
               top={`${frameY}%`}
               left={`${100 - frameX}%`}
               alignRight={true}
-              onClick={(active) => setSelectedItem(active ? items.frame : null)}
-              onHover={() => setHoveredItem(items.frame)}
-              onLeave={() => setHoveredItem(null)}
+              isActive={selectedItem?.id === 'frame'}
+              isHovered={hoveredItem?.id === 'frame'}
               onAddToCart={() => setCartCount(c => c + 1)}
+              onClose={() => setSelectedItem(null)}
             />
-            <Hotspot
+            <ItemTooltip
               top={`${tableY}%`}
               left={`${100 - tableX}%`}
               alignRight={true}
-              onClick={(active) => setSelectedItem(active ? items.table : null)}
-              onHover={() => setHoveredItem(items.table)}
-              onLeave={() => setHoveredItem(null)}
+              isActive={selectedItem?.id === 'table'}
+              isHovered={hoveredItem?.id === 'table'}
               onAddToCart={() => setCartCount(c => c + 1)}
+              onClose={() => setSelectedItem(null)}
             />
           </div>
         </motion.div>
@@ -298,38 +577,115 @@ const App = () => {
             {/* Grain Overlay - Sized directly to this specific div */}
             <GrainEffect />
 
-            {/* Hotspots on Right Image */}
-            <Hotspot
+            {/* SVG Polygon Hitbox Overlay for Right Panel */}
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-auto z-10"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              onClick={(e) => handleSvgClick(e, false)}
+            >
+              {Object.entries(polygons).map(([id, points]) => {
+                const pointsStr = getPointsString(points, false);
+                return (
+                  <polygon
+                    key={id}
+                    points={pointsStr}
+                    className="cursor-pointer"
+                    style={{
+                      fill: isEditingPolygon && selectedEditItem === id
+                        ? 'rgba(234, 179, 8, 0.4)'
+                        : isEditingPolygon
+                        ? 'rgba(234, 179, 8, 0.15)'
+                        : 'transparent',
+                      stroke: isEditingPolygon
+                        ? selectedEditItem === id
+                          ? '#feec04'
+                          : 'rgba(234, 179, 8, 0.6)'
+                        : 'transparent',
+                      strokeWidth: isEditingPolygon ? 0.4 : 0,
+                      strokeDasharray: isEditingPolygon ? '1 1' : 'none',
+                    }}
+                    onMouseEnter={() => {
+                      if (!isEditingPolygon) {
+                        setHoveredItem(items[id as keyof typeof items]);
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (!isEditingPolygon) {
+                        setHoveredItem(null);
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isEditingPolygon) {
+                        setSelectedEditItem(id);
+                      } else {
+                        const isCurrentlyActive = selectedItem?.id === id;
+                        setSelectedItem(isCurrentlyActive ? null : items[id as keyof typeof items]);
+                      }
+                    }}
+                  />
+                );
+              })}
+
+              {/* Drag handles for editing polygon - Right panel */}
+              {isEditingPolygon && selectedEditItem && (
+                <>
+                  {polygons[selectedEditItem]?.map((pt, index) => {
+                    return (
+                      <circle
+                        key={index}
+                        cx={pt.x}
+                        cy={pt.y}
+                        r="0.8"
+                        fill="#feec04"
+                        stroke="#000"
+                        strokeWidth="0.15"
+                        className="cursor-move hover:scale-125 transition-transform duration-150"
+                        onMouseDown={(e) => handleHandleMouseDown(e, selectedEditItem, index, false)}
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          handleDeletePoint(selectedEditItem, index);
+                        }}
+                      />
+                    );
+                  })}
+                </>
+              )}
+            </svg>
+
+            {/* Tooltips on Right Image */}
+            <ItemTooltip
               top={`${chairY}%`}
               left={`${chairX}%`}
-              onClick={(active) => setSelectedItem(active ? items.chair : null)}
-              onHover={() => setHoveredItem(items.chair)}
-              onLeave={() => setHoveredItem(null)}
+              isActive={selectedItem?.id === 'chair'}
+              isHovered={hoveredItem?.id === 'chair'}
               onAddToCart={() => setCartCount(c => c + 1)}
+              onClose={() => setSelectedItem(null)}
             />
-            <Hotspot
+            <ItemTooltip
               top={`${vaseY}%`}
               left={`${vaseX}%`}
-              onClick={(active) => setSelectedItem(active ? items.vase : null)}
-              onHover={() => setHoveredItem(items.vase)}
-              onLeave={() => setHoveredItem(null)}
+              isActive={selectedItem?.id === 'vase'}
+              isHovered={hoveredItem?.id === 'vase'}
               onAddToCart={() => setCartCount(c => c + 1)}
+              onClose={() => setSelectedItem(null)}
             />
-            <Hotspot
+            <ItemTooltip
               top={`${frameY}%`}
               left={`${frameX}%`}
-              onClick={(active) => setSelectedItem(active ? items.frame : null)}
-              onHover={() => setHoveredItem(items.frame)}
-              onLeave={() => setHoveredItem(null)}
+              isActive={selectedItem?.id === 'frame'}
+              isHovered={hoveredItem?.id === 'frame'}
               onAddToCart={() => setCartCount(c => c + 1)}
+              onClose={() => setSelectedItem(null)}
             />
-            <Hotspot
+            <ItemTooltip
               top={`${tableY}%`}
               left={`${tableX}%`}
-              onClick={(active) => setSelectedItem(active ? items.table : null)}
-              onHover={() => setHoveredItem(items.table)}
-              onLeave={() => setHoveredItem(null)}
+              isActive={selectedItem?.id === 'table'}
+              isHovered={hoveredItem?.id === 'table'}
               onAddToCart={() => setCartCount(c => c + 1)}
+              onClose={() => setSelectedItem(null)}
             />
           </div>
         </motion.div>
@@ -348,7 +704,7 @@ const App = () => {
         <div className="flex justify-between items-start w-full">
           <div className="flex h-full">
             {/* Far Left: Logo & Icons */}
-            <div className="flex flex-col items-center  pointer-events-auto">
+            <div className="flex flex-col items-center  pointer-events-auto" onClick={(e) => e.stopPropagation()}>
               <img src={logo} alt="Lavis" className="w-27.75 h-19 mb-8 hover:scale-105 transition-transform duration-300" />
 
               <button className="mb-6 text-white hover:text-yellow-400 transition-colors duration-200 cursor-pointer">
@@ -378,7 +734,7 @@ const App = () => {
             </div>
 
             {/* Vertical Menu */}
-            <div className="ml-4 flex flex-col pointer-events-auto bg-[#E0E0CF] absolute top-0 left-[8%] backdrop-blur-md border  w-48 h-96.75 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pt-4">
+            <div className="ml-4 flex flex-col pointer-events-auto bg-[#E0E0CF] absolute top-0 left-[8%] backdrop-blur-md border  w-48 h-96.75 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pt-4" onClick={(e) => e.stopPropagation()}>
               <ul className="flex flex-col py-6 px-6 gap-8">
                 {[
                   { id: '01', name: 'HOME', active: true },
@@ -406,7 +762,7 @@ const App = () => {
           </div>
 
           {/* Top Right: Split Toggle Button */}
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setIsSplit(!isSplit)}
               className="flex items-center justify-center w-12 h-12 bg-black/50 hover:bg-yellow-400 hover:text-black text-white rounded-full border border-white/10 backdrop-blur-md transition-all duration-350 shadow-2xl cursor-pointer hover:scale-105 active:scale-95 group"
@@ -455,7 +811,7 @@ const App = () => {
             )}
           </div>
 
-          <div className="text-right text-white text-xs font-semibold leading-relaxed uppercase pointer-events-auto  drop-shadow-md">
+          <div className="text-right text-white text-xs font-semibold leading-relaxed uppercase pointer-events-auto  drop-shadow-md" onClick={(e) => e.stopPropagation()}>
             <p >WESTON</p>
             <p>10 SUNTRACT ROAD,</p>
             <p>TORONTO, ON</p>
@@ -470,10 +826,13 @@ const App = () => {
 
       {/* Debug Control Panel (Press 'd' to toggle) */}
       {showDebug && (
-        <div className="fixed bottom-4 left-4 z-50 bg-black/90 text-white p-6 rounded-xl border border-white/20 w-96 text-xs max-h-[85vh] overflow-y-auto shadow-2xl">
+        <div 
+          className="fixed bottom-4 left-4 z-50 bg-black/90 text-white p-6 rounded-xl border border-white/20 w-96 text-xs max-h-[85vh] overflow-y-auto shadow-2xl pointer-events-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
           <h3 className="font-bold text-sm mb-4 border-b border-white/20 pb-2 flex justify-between">
-            <span>Alignment & Hotspot Adjuster</span>
-            <button onClick={() => setShowDebug(false)} className="text-red-400">Close</button>
+            <span>Alignment & Polygon Editor</span>
+            <button onClick={() => setShowDebug(false)} className="text-red-400 cursor-pointer">Close</button>
           </h3>
 
           <div className="space-y-4">
@@ -482,7 +841,7 @@ const App = () => {
               <span>View Mode:</span>
               <button
                 onClick={() => setIsSplit(!isSplit)}
-                className="bg-yellow-400 text-black px-3 py-1 rounded font-bold"
+                className="bg-yellow-400 text-black px-3 py-1 rounded font-bold cursor-pointer"
               >
                 {isSplit ? 'Split 50/50' : 'Default View'}
               </button>
@@ -544,8 +903,9 @@ const App = () => {
               />
             </div>
 
+            {/* Hotspots Positions (Add to Cart tooltip anchors) */}
             <div className="border-t border-white/10 pt-3">
-              <h4 className="font-bold mb-2">Hotspots Positions (%):</h4>
+              <h4 className="font-bold mb-2">Button Anchor Positions (%):</h4>
 
               {/* Chair Hotspot */}
               <div className="space-y-1 mb-2">
@@ -625,6 +985,114 @@ const App = () => {
                   onChange={(e) => setTableY(Number(e.target.value))}
                   className="w-full accent-yellow-400"
                 />
+              </div>
+            </div>
+
+            {/* Polygon Hitbox Editor Controls */}
+            <div className="border-t border-white/10 pt-3 mt-3">
+              <h4 className="font-bold mb-2 flex justify-between items-center text-yellow-400">
+                <span>Polygon Hitbox Editor</span>
+                <span className="text-[10px] text-white/50">(Double-click edge or click SVG to add, right-click point to delete)</span>
+              </h4>
+
+              {/* Edit Toggle */}
+              <div className="flex justify-between items-center bg-white/5 p-2 rounded mb-2">
+                <span>Edit Mode:</span>
+                <button
+                  onClick={() => setIsEditingPolygon(!isEditingPolygon)}
+                  className={`px-3 py-1 rounded font-bold transition-colors cursor-pointer ${
+                    isEditingPolygon ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+                  }`}
+                >
+                  {isEditingPolygon ? 'EDITING ON' : 'EDITING OFF'}
+                </button>
+              </div>
+
+              {isEditingPolygon && (
+                <div className="space-y-3 bg-white/5 p-2 rounded">
+                  {/* Select Item to Edit */}
+                  <div>
+                    <label className="block mb-1 font-semibold">Active Item:</label>
+                    <select
+                      value={selectedEditItem}
+                      onChange={(e) => setSelectedEditItem(e.target.value)}
+                      className="w-full bg-black border border-white/20 p-1.5 rounded text-white font-semibold cursor-pointer"
+                    >
+                      <option value="chair">Chair (Yellow Armchair)</option>
+                      <option value="vase">Vase (Baso Uno & Pedestal)</option>
+                      <option value="frame">Frame (Milano Linea Frame)</option>
+                      <option value="table">Table (Vetra Console)</option>
+                    </select>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setPolygons(prev => ({
+                          ...prev,
+                          [selectedEditItem]: []
+                        }));
+                      }}
+                      className="flex-1 bg-red-600 hover:bg-red-700 text-white py-1 rounded font-semibold cursor-pointer text-center"
+                    >
+                      Clear Points
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPolygons(prev => {
+                          const updated = [...(prev[selectedEditItem] || [])];
+                          updated.pop();
+                          return {
+                            ...prev,
+                            [selectedEditItem]: updated
+                          };
+                        });
+                      }}
+                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-1 rounded font-semibold cursor-pointer text-center"
+                    >
+                      Undo Point
+                    </button>
+                  </div>
+
+                  {/* Vertex Points List */}
+                  <div>
+                    <span className="font-semibold block mb-1">
+                      Vertices ({polygons[selectedEditItem]?.length || 0}):
+                    </span>
+                    <div className="max-h-24 overflow-y-auto border border-white/10 rounded p-1 space-y-1 bg-black/40">
+                      {polygons[selectedEditItem]?.map((pt, idx) => (
+                        <div key={idx} className="flex justify-between items-center text-[10px] font-mono hover:bg-white/5 px-1 rounded">
+                          <span>Pt {idx + 1}: X: {pt.x}%, Y: {pt.y}%</span>
+                          <button
+                            onClick={() => handleDeletePoint(selectedEditItem, idx)}
+                            className="text-red-400 hover:text-red-600 font-bold px-1"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* JSON Exporter */}
+              <div className="mt-3">
+                <span className="font-semibold block mb-1">Export Coordinates JSON:</span>
+                <textarea
+                  readOnly
+                  value={JSON.stringify(polygons, null, 2)}
+                  onClick={(e) => {
+                    const el = e.target as HTMLTextAreaElement;
+                    el.select();
+                    navigator.clipboard.writeText(el.value);
+                  }}
+                  className="w-full h-24 bg-black border border-white/20 p-2 rounded text-[10px] font-mono text-green-400 cursor-pointer"
+                  title="Click to select all and copy"
+                  placeholder="Polygon coordinates JSON"
+                />
+                <span className="text-[9px] text-white/40 mt-1 block">Click text box to select all and copy coordinates.</span>
               </div>
             </div>
 
