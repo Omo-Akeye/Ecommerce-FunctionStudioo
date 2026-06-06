@@ -17,7 +17,7 @@ const Hotspot = ({
   left: string;
   alignRight?: boolean;
   onAddToCart: () => void;
-  onClick: () => void;
+  onClick: (active: boolean) => void;
   onHover?: () => void;
   onLeave?: () => void;
 }) => {
@@ -29,8 +29,9 @@ const Hotspot = ({
       className="absolute z-20"
       style={{ top, left }}
       onClick={() => {
-        setIsActive(!isActive);
-        onClick();
+        const newActive = !isActive;
+        setIsActive(newActive);
+        onClick(newActive);
       }}
       onMouseEnter={() => {
         setIsHovered(true);
@@ -243,7 +244,7 @@ const App = () => {
               top={`${chairY}%`}
               left={`${100 - chairX}%`}
               alignRight={true}
-              onClick={() => setSelectedItem(items.chair)}
+              onClick={(active) => setSelectedItem(active ? items.chair : null)}
               onHover={() => setHoveredItem(items.chair)}
               onLeave={() => setHoveredItem(null)}
               onAddToCart={() => setCartCount(c => c + 1)}
@@ -252,7 +253,7 @@ const App = () => {
               top={`${vaseY}%`}
               left={`${100 - vaseX}%`}
               alignRight={true}
-              onClick={() => setSelectedItem(items.vase)}
+              onClick={(active) => setSelectedItem(active ? items.vase : null)}
               onHover={() => setHoveredItem(items.vase)}
               onLeave={() => setHoveredItem(null)}
               onAddToCart={() => setCartCount(c => c + 1)}
@@ -261,7 +262,7 @@ const App = () => {
               top={`${frameY}%`}
               left={`${100 - frameX}%`}
               alignRight={true}
-              onClick={() => setSelectedItem(items.frame)}
+              onClick={(active) => setSelectedItem(active ? items.frame : null)}
               onHover={() => setHoveredItem(items.frame)}
               onLeave={() => setHoveredItem(null)}
               onAddToCart={() => setCartCount(c => c + 1)}
@@ -270,7 +271,7 @@ const App = () => {
               top={`${tableY}%`}
               left={`${100 - tableX}%`}
               alignRight={true}
-              onClick={() => setSelectedItem(items.table)}
+              onClick={(active) => setSelectedItem(active ? items.table : null)}
               onHover={() => setHoveredItem(items.table)}
               onLeave={() => setHoveredItem(null)}
               onAddToCart={() => setCartCount(c => c + 1)}
@@ -301,7 +302,7 @@ const App = () => {
             <Hotspot
               top={`${chairY}%`}
               left={`${chairX}%`}
-              onClick={() => setSelectedItem(items.chair)}
+              onClick={(active) => setSelectedItem(active ? items.chair : null)}
               onHover={() => setHoveredItem(items.chair)}
               onLeave={() => setHoveredItem(null)}
               onAddToCart={() => setCartCount(c => c + 1)}
@@ -309,7 +310,7 @@ const App = () => {
             <Hotspot
               top={`${vaseY}%`}
               left={`${vaseX}%`}
-              onClick={() => setSelectedItem(items.vase)}
+              onClick={(active) => setSelectedItem(active ? items.vase : null)}
               onHover={() => setHoveredItem(items.vase)}
               onLeave={() => setHoveredItem(null)}
               onAddToCart={() => setCartCount(c => c + 1)}
@@ -317,7 +318,7 @@ const App = () => {
             <Hotspot
               top={`${frameY}%`}
               left={`${frameX}%`}
-              onClick={() => setSelectedItem(items.frame)}
+              onClick={(active) => setSelectedItem(active ? items.frame : null)}
               onHover={() => setHoveredItem(items.frame)}
               onLeave={() => setHoveredItem(null)}
               onAddToCart={() => setCartCount(c => c + 1)}
@@ -325,7 +326,7 @@ const App = () => {
             <Hotspot
               top={`${tableY}%`}
               left={`${tableX}%`}
-              onClick={() => setSelectedItem(items.table)}
+              onClick={(active) => setSelectedItem(active ? items.table : null)}
               onHover={() => setHoveredItem(items.table)}
               onLeave={() => setHoveredItem(null)}
               onAddToCart={() => setCartCount(c => c + 1)}
