@@ -220,7 +220,8 @@ const App = () => {
 
         {/* Left Panel Container (0% to splitPercent%) */}
         <motion.div
-          className="absolute left-0 top-0 h-full overflow-hidden border-r border-yellow-400/20"
+          // className="absolute left-0 top-0 h-full overflow-hidden border-r border-yellow-400/20"
+          className="absolute left-0 top-0 h-full overflow-hidden"
           animate={{ width: `${splitPercent}%` }}
           transition={{ type: 'spring', stiffness: 80, damping: 20 }}
         >
