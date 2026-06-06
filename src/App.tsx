@@ -315,8 +315,11 @@ const App = () => {
   });
   const [isEditingPolygon, setIsEditingPolygon] = useState(false);
   const [selectedEditItem, setSelectedEditItem] = useState<string>('chair');
-  // Tracks cursor pixel position for the single active tooltip
+  // Tracks cursor pixel position for hover, and a pinned position for click
   const [cursorPx, setCursorPx] = useState<{ x: number; y: number } | null>(null);
+  const [pinnedPos, setPinnedPos] = useState<{ x: number; y: number } | null>(null);
+  // The tooltip position is: live cursor when hovering, or pinned position when clicked
+  const tooltipPos = cursorPx ?? pinnedPos;
   const activeItem = hoveredItem || selectedItem;
 
   // Mouse / SVG interaction handlers
@@ -403,6 +406,7 @@ const App = () => {
   const handleBackgroundClick = () => {
     if (isEditingPolygon) return;
     setSelectedItem(null);
+    setPinnedPos(null);
   };
 
   // Toggle debug panel with 'd' key
@@ -483,6 +487,7 @@ const App = () => {
                       if (!isEditingPolygon) {
                         setHoveredItem(null);
                         setCursorPx(null);
+                        // cursorPx clears on leave, but pinnedPos keeps the tooltip pinned if item was clicked
                       }
                     }}
                     onClick={(e) => {
@@ -491,7 +496,15 @@ const App = () => {
                         setSelectedEditItem(id);
                       } else {
                         const isCurrentlyActive = selectedItem?.id === id;
-                        setSelectedItem(isCurrentlyActive ? null : items[id as keyof typeof items]);
+                        if (isCurrentlyActive) {
+                          // Deselect: clear pin
+                          setSelectedItem(null);
+                          setPinnedPos(null);
+                        } else {
+                          // Select: pin the tooltip at current cursor position
+                          setSelectedItem(items[id as keyof typeof items]);
+                          setPinnedPos({ x: e.clientX, y: e.clientY });
+                        }
                       }
                     }}
                   />
@@ -592,6 +605,7 @@ const App = () => {
                       if (!isEditingPolygon) {
                         setHoveredItem(null);
                         setCursorPx(null);
+                        // pinnedPos keeps the tooltip visible if the item was clicked
                       }
                     }}
                     onClick={(e) => {
@@ -600,7 +614,15 @@ const App = () => {
                         setSelectedEditItem(id);
                       } else {
                         const isCurrentlyActive = selectedItem?.id === id;
-                        setSelectedItem(isCurrentlyActive ? null : items[id as keyof typeof items]);
+                        if (isCurrentlyActive) {
+                          // Deselect: clear pin
+                          setSelectedItem(null);
+                          setPinnedPos(null);
+                        } else {
+                          // Select: pin the tooltip at current cursor position
+                          setSelectedItem(items[id as keyof typeof items]);
+                          setPinnedPos({ x: e.clientX, y: e.clientY });
+                        }
                       }
                     }}
                   />
@@ -638,13 +660,13 @@ const App = () => {
         </motion.div>
       </div>
 
-      {/* Single Fixed Tooltip — rendered above everything, follows cursor */}
+      {/* Single Fixed Tooltip — rendered above everything, follows cursor on hover or stays pinned on click */}
       <ItemTooltip
-        screenX={cursorPx?.x ?? 0}
-        screenY={cursorPx?.y ?? 0}
-        isOpen={!!activeItem && !!cursorPx}
+        screenX={tooltipPos?.x ?? 0}
+        screenY={tooltipPos?.y ?? 0}
+        isOpen={!!activeItem && !!tooltipPos}
         onAddToCart={() => setCartCount(c => c + 1)}
-        onClose={() => { setSelectedItem(null); setCursorPx(null); }}
+        onClose={() => { setSelectedItem(null); setPinnedPos(null); setCursorPx(null); }}
       />
 
       {/* Shadow Overlay for the whole viewport to merge with dark sidebar */}
