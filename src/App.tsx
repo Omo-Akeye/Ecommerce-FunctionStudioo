@@ -5,51 +5,51 @@ import bg2 from './assets/bg2.png';
 import logo from './assets/logo.png';
 
 const ItemTooltip = ({
-  top,
-  left,
-  alignRight = false,
-  isActive,
-  isHovered,
+  screenX,
+  screenY,
+  isOpen,
   onAddToCart,
   onClose,
 }: {
-  top: string;
-  left: string;
-  alignRight?: boolean;
-  isActive: boolean;
-  isHovered: boolean;
+  screenX: number;
+  screenY: number;
+  isOpen: boolean;
   onAddToCart: () => void;
   onClose: () => void;
 }) => {
+  // Half-dimensions of the button (155px wide, ~80px tall) for boundary clamping
+  const halfW = 77.5;
+  const halfH = 40;
+  const clampedX = Math.max(halfW, Math.min(window.innerWidth - halfW, screenX));
+  const clampedY = Math.max(halfH, Math.min(window.innerHeight - halfH, screenY));
+
   return (
-    <div
-      className="absolute z-20 pointer-events-none"
-      style={{ top, left }}
-    >
-      {/* Add to Cart Tooltip */}
-      <AnimatePresence>
-        {(isActive || isHovered) && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, x: alignRight ? 16 : -16, y: '-50%' }}
-            animate={{ opacity: 1, scale: 1, x: alignRight ? 24 : -24, y: '-50%' }}
-            exit={{ opacity: 0, scale: 0.9, x: alignRight ? 16 : -16, y: '-50%' }}
-            transition={{ duration: 0.2 }}
-            className={`absolute top-1/2 w-38.75 bg-[#0000008F] backdrop-blur-[7.61px] text-black p-4 rounded-[57px] pointer-events-auto ${alignRight ? 'left-4' : 'right-4'
-              }`}
-          >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onAddToCart();
-                onClose();
-              }}
-              className="w-full text-white text-[10px] tracking-wider font-bold py-2 transition-colors duration-200 cursor-pointer">
-              ADD TO CART
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ duration: 0.15 }}
+          className="fixed z-[100] pointer-events-auto w-38.75 bg-[#0000008F] backdrop-blur-[7.61px] text-black p-4 rounded-[57px]"
+          style={{
+            left: clampedX,
+            top: clampedY,
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart();
+              onClose();
+            }}
+            className="w-full text-white text-[10px] tracking-wider font-bold py-2 transition-colors duration-200 cursor-pointer">
+            ADD TO CART
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -315,6 +315,9 @@ const App = () => {
   });
   const [isEditingPolygon, setIsEditingPolygon] = useState(false);
   const [selectedEditItem, setSelectedEditItem] = useState<string>('chair');
+  // Tracks cursor pixel position for the single active tooltip
+  const [cursorPx, setCursorPx] = useState<{ x: number; y: number } | null>(null);
+  const activeItem = hoveredItem || selectedItem;
 
   // Mouse / SVG interaction handlers
   const handleSvgClick = (e: React.MouseEvent<SVGSVGElement>, isLeftPanel: boolean) => {
@@ -471,9 +474,15 @@ const App = () => {
                         setHoveredItem(items[id as keyof typeof items]);
                       }
                     }}
+                    onMouseMove={(e) => {
+                      if (!isEditingPolygon) {
+                        setCursorPx({ x: e.clientX, y: e.clientY });
+                      }
+                    }}
                     onMouseLeave={() => {
                       if (!isEditingPolygon) {
                         setHoveredItem(null);
+                        setCursorPx(null);
                       }
                     }}
                     onClick={(e) => {
@@ -518,44 +527,8 @@ const App = () => {
               )}
             </svg>
 
-            {/* Tooltips on Left Image */}
-            <ItemTooltip
-              top={`${chairY}%`}
-              left={`${100 - chairX}%`}
-              alignRight={true}
-              isActive={selectedItem?.id === 'chair'}
-              isHovered={hoveredItem?.id === 'chair'}
-              onAddToCart={() => setCartCount(c => c + 1)}
-              onClose={() => setSelectedItem(null)}
-            />
-            <ItemTooltip
-              top={`${vaseY}%`}
-              left={`${100 - vaseX}%`}
-              alignRight={true}
-              isActive={selectedItem?.id === 'vase'}
-              isHovered={hoveredItem?.id === 'vase'}
-              onAddToCart={() => setCartCount(c => c + 1)}
-              onClose={() => setSelectedItem(null)}
-            />
-            <ItemTooltip
-              top={`${frameY}%`}
-              left={`${100 - frameX}%`}
-              alignRight={true}
-              isActive={selectedItem?.id === 'frame'}
-              isHovered={hoveredItem?.id === 'frame'}
-              onAddToCart={() => setCartCount(c => c + 1)}
-              onClose={() => setSelectedItem(null)}
-            />
-            <ItemTooltip
-              top={`${tableY}%`}
-              left={`${100 - tableX}%`}
-              alignRight={true}
-              isActive={selectedItem?.id === 'table'}
-              isHovered={hoveredItem?.id === 'table'}
-              onAddToCart={() => setCartCount(c => c + 1)}
-              onClose={() => setSelectedItem(null)}
-            />
           </div>
+
         </motion.div>
 
         {/* Right Panel Container (splitPercent% to 100%) */}
@@ -610,9 +583,15 @@ const App = () => {
                         setHoveredItem(items[id as keyof typeof items]);
                       }
                     }}
+                    onMouseMove={(e) => {
+                      if (!isEditingPolygon) {
+                        setCursorPx({ x: e.clientX, y: e.clientY });
+                      }
+                    }}
                     onMouseLeave={() => {
                       if (!isEditingPolygon) {
                         setHoveredItem(null);
+                        setCursorPx(null);
                       }
                     }}
                     onClick={(e) => {
@@ -654,42 +633,19 @@ const App = () => {
               )}
             </svg>
 
-            {/* Tooltips on Right Image */}
-            <ItemTooltip
-              top={`${chairY}%`}
-              left={`${chairX}%`}
-              isActive={selectedItem?.id === 'chair'}
-              isHovered={hoveredItem?.id === 'chair'}
-              onAddToCart={() => setCartCount(c => c + 1)}
-              onClose={() => setSelectedItem(null)}
-            />
-            <ItemTooltip
-              top={`${vaseY}%`}
-              left={`${vaseX}%`}
-              isActive={selectedItem?.id === 'vase'}
-              isHovered={hoveredItem?.id === 'vase'}
-              onAddToCart={() => setCartCount(c => c + 1)}
-              onClose={() => setSelectedItem(null)}
-            />
-            <ItemTooltip
-              top={`${frameY}%`}
-              left={`${frameX}%`}
-              isActive={selectedItem?.id === 'frame'}
-              isHovered={hoveredItem?.id === 'frame'}
-              onAddToCart={() => setCartCount(c => c + 1)}
-              onClose={() => setSelectedItem(null)}
-            />
-            <ItemTooltip
-              top={`${tableY}%`}
-              left={`${tableX}%`}
-              isActive={selectedItem?.id === 'table'}
-              isHovered={hoveredItem?.id === 'table'}
-              onAddToCart={() => setCartCount(c => c + 1)}
-              onClose={() => setSelectedItem(null)}
-            />
           </div>
+
         </motion.div>
       </div>
+
+      {/* Single Fixed Tooltip — rendered above everything, follows cursor */}
+      <ItemTooltip
+        screenX={cursorPx?.x ?? 0}
+        screenY={cursorPx?.y ?? 0}
+        isOpen={!!activeItem && !!cursorPx}
+        onAddToCart={() => setCartCount(c => c + 1)}
+        onClose={() => { setSelectedItem(null); setCursorPx(null); }}
+      />
 
       {/* Shadow Overlay for the whole viewport to merge with dark sidebar */}
       <div className="absolute inset-0 bg-linear-to-r from-black from-25% via-33% to-50% via-black/40 to-transparent pointer-events-none z-0"></div>
