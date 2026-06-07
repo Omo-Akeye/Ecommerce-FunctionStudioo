@@ -670,9 +670,10 @@ const App = () => {
       />
 
       {/* Shadow Overlay for the whole viewport to merge with dark sidebar */}
-      <div className="absolute inset-0 bg-linear-to-r from-black from-25% via-33% to-50% via-black/40 to-transparent pointer-events-none z-0"></div>
+      {/* <div className="absolute inset-0 bg-linear-to-r from-black from-25% via-33% to-50% via-black/40 to-transparent pointer-events-none z-0"></div> */}
 
-      {/* Subtle Yellow Ambient Spotlight */}
+   <div className="absolute inset-0 bg-linear-to-r from-[#21241E] from-25% via-33% to-50% via-[#24251D00] to-transparent pointer-events-none z-0"></div>
+   
       <div className="absolute top-0 left-0 w-150 h-150 bg-yellow-400/5 rounded-full blur-[140px] pointer-events-none z-0"></div>
 
       {/* UI Overlay Container */}
@@ -712,8 +713,16 @@ const App = () => {
             </div>
 
             {/* Vertical Menu */}
-            <div className="ml-4 flex flex-col pointer-events-auto bg-[#E0E0CF] absolute top-0 left-[8%] backdrop-blur-md border  w-48 h-96.75 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pt-4" onClick={(e) => e.stopPropagation()}>
-              <ul className="flex flex-col py-6 px-6 gap-8">
+            <div
+              className="ml-4 flex flex-col pointer-events-auto absolute top-0 left-[10%] w-48 h-[500px] overflow-hidden pt-4"
+              style={{
+                background: 'linear-gradient(179.98deg, #E0E0CF 54.59%, rgba(255, 255, 255, 0) 79.5%)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ul className="flex flex-col py-6 px-6 gap-6">
                 {[
                   { id: '01', name: 'HOME', active: true },
                   { id: '02', name: 'SHOWROOM', active: false },
@@ -722,15 +731,20 @@ const App = () => {
                   { id: '05', name: 'PROJECTS', active: false },
                   { id: '06', name: 'CONTACT US', active: false },
                 ].map((item) => (
-                  <li key={item.id} className="flex items-center text-xs font-semibold tracking-widest cursor-pointer group gap-5">
+                  <li key={item.id} className="flex items-center text-xs font-semibold tracking-widest cursor-pointer group gap-2">
                     <span className="text-[#00000052] group-hover:text-yellow-400 transition-colors duration-200">{item.id}</span>
-                    <span className={`${item.active ? 'text-[#9A7700]' : 'text-black'} group-hover:text-[#9A7700] transition-colors duration-200`}>
-                      {item.name} {item.active && '→'}
+                    <span className={`${item.active ? 'text-[#9A7700]' : 'text-black'} group-hover:text-[#9A7700] transition-colors duration-200 flex items-center gap-2`}>
+                      {item.name}
+                      <span className={`${item.active ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-200`}>
+                        <svg width="11" height="9" viewBox="0 0 11 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10.372 4.68477L6.43453 8.62228C6.35244 8.70437 6.2411 8.75049 6.125 8.75049C6.0089 8.75049 5.89756 8.70437 5.81547 8.62228C5.73338 8.54018 5.68726 8.42884 5.68726 8.31274C5.68726 8.19665 5.73338 8.08531 5.81547 8.00321L9.00648 4.81274H0.4375C0.321468 4.81274 0.210188 4.76665 0.128141 4.6846C0.0460937 4.60256 0 4.49128 0 4.37524C0 4.25921 0.0460937 4.14793 0.128141 4.06588C0.210188 3.98384 0.321468 3.93774 0.4375 3.93774H9.00648L5.81547 0.747275C5.73338 0.665182 5.68726 0.55384 5.68726 0.437743C5.68726 0.321647 5.73338 0.210305 5.81547 0.128212C5.89756 0.0461192 6.0089 0 6.125 0C6.2411 0 6.35244 0.0461192 6.43453 0.128212L10.372 4.06571C10.4127 4.10634 10.445 4.1546 10.467 4.20771C10.489 4.26082 10.5003 4.31775 10.5003 4.37524C10.5003 4.43274 10.489 4.48967 10.467 4.54278C10.445 4.59589 10.4127 4.64414 10.372 4.68477Z" fill="currentColor" />
+                        </svg>
+                      </span>
                     </span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-2 bg-[#FEEC04] text-black text-xs font-semibold py-4 px-6 cursor-pointer flex justify-between items-center hover:bg-yellow-300 transition-colors duration-250">
+              <div className="mt-3 bg-[#FEEC04] text-black text-xs font-semibold py-4 px-6 cursor-pointer flex justify-between items-center hover:bg-yellow-300 transition-colors duration-250">
                 SIGN IN <span><svg width="11" height="9" viewBox="0 0 11 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M10.372 4.68477L6.43453 8.62228C6.35244 8.70437 6.2411 8.75049 6.125 8.75049C6.0089 8.75049 5.89756 8.70437 5.81547 8.62228C5.73338 8.54018 5.68726 8.42884 5.68726 8.31274C5.68726 8.19665 5.73338 8.08531 5.81547 8.00321L9.00648 4.81274H0.4375C0.321468 4.81274 0.210188 4.76665 0.128141 4.6846C0.0460937 4.60256 0 4.49128 0 4.37524C0 4.25921 0.0460937 4.14793 0.128141 4.06588C0.210188 3.98384 0.321468 3.93774 0.4375 3.93774H9.00648L5.81547 0.747275C5.73338 0.665182 5.68726 0.55384 5.68726 0.437743C5.68726 0.321647 5.73338 0.210305 5.81547 0.128212C5.89756 0.0461192 6.0089 0 6.125 0C6.2411 0 6.35244 0.0461192 6.43453 0.128212L10.372 4.06571C10.4127 4.10634 10.445 4.1546 10.467 4.20771C10.489 4.26082 10.5003 4.31775 10.5003 4.37524C10.5003 4.43274 10.489 4.48967 10.467 4.54278C10.445 4.59589 10.4127 4.64414 10.372 4.68477Z" fill="#1C1A1B" />
                 </svg>
@@ -762,7 +776,7 @@ const App = () => {
         </div>
 
         {/* Bottom Section: Typography */}
-        <div className="w-full flex justify-between items-end ">
+        <div className="w-full flex justify-between items-end z-100">
           <div className="max-w-111 select-none">
             {displayItem ? (
               <motion.div
