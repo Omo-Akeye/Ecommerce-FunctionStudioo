@@ -130,7 +130,6 @@ const GrainEffect = () => {
 const App = () => {
   // Layout States
   const [isSplit, setIsSplit] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
   const [selectedItem, setSelectedItem] = useState<{ id: string, title: string, subtitle?: string, price: string } | null>(null);
   const [hoveredItem, setHoveredItem] = useState<{ id: string, title: string, subtitle?: string, price: string } | null>(null);
   const [cartCount, setCartCount] = useState(0);
@@ -144,21 +143,11 @@ const App = () => {
     table: { id: 'table', title: "Vetra Console", subtitle: "", price: "$2500" },
   };
 
-  // Alignment Parameters (Adjustable via debug panel)
-  const [leftOffset, setLeftOffset] = useState(-2);
-  const [rightOffset, setRightOffset] = useState(-7);
-  const [aspectLeft, setAspectLeft] = useState(1.193);
-  const [aspectRight, setAspectRight] = useState(1.412);
-
-  // Hotspot Positions (Adjustable via debug panel)
-  const [chairX, setChairX] = useState(55.2);
-  const [chairY, setChairY] = useState(53.3);
-  const [vaseX, setVaseX] = useState(31.8);
-  const [vaseY, setVaseY] = useState(45.0);
-  const [frameX, setFrameX] = useState(42.8);
-  const [frameY, setFrameY] = useState(23.0);
-  const [tableX, setTableX] = useState(17.8);
-  const [tableY, setTableY] = useState(59.3);
+  // Layout Constants (previously adjustable alignment parameters)
+  const LEFT_OFFSET = -2;
+  const RIGHT_OFFSET = -7;
+  const ASPECT_LEFT = 1.193;
+  const ASPECT_RIGHT = 1.412;
 
   // Calculate default split percentage dynamically based on screen width/height
   const [defaultSplit, setDefaultSplit] = useState(28.5);
@@ -168,10 +157,10 @@ const App = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
 
-      // The right image (bg.png) has width = aspectRight * height
-      // To align it to the right edge, its left edge is at (w - aspectRight * h)
+      // The right image (bg.png) has width = ASPECT_RIGHT * height
+      // To align it to the right edge, its left edge is at (w - ASPECT_RIGHT * h)
       // The split seam as a percentage of width is:
-      const defaultSplitPercent = ((w - aspectRight * h) / w) * 100;
+      const defaultSplitPercent = ((w - ASPECT_RIGHT * h) / w) * 100;
 
       // Clamp between 15% and 40% to preserve look on extreme screens
       setDefaultSplit(Math.max(15, Math.min(40, defaultSplitPercent)));
@@ -180,7 +169,7 @@ const App = () => {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [aspectRight]);
+  }, []);
 
   // Seam position based on split state
   const splitPercent = isSplit ? 50 : defaultSplit;
@@ -315,8 +304,6 @@ const App = () => {
 
 
   });
-  const [isEditingPolygon, setIsEditingPolygon] = useState(false);
-  const [selectedEditItem, setSelectedEditItem] = useState<string>('chair');
   // Tracks cursor pixel position for hover, and a pinned position for click
   const [cursorPx, setCursorPx] = useState<{ x: number; y: number } | null>(null);
   const [pinnedPos, setPinnedPos] = useState<{ x: number; y: number } | null>(null);
@@ -324,103 +311,10 @@ const App = () => {
   const tooltipPos = cursorPx ?? pinnedPos;
   const activeItem = hoveredItem || selectedItem;
 
-  // Mouse / SVG interaction handlers
-  const handleSvgClick = (e: React.MouseEvent<SVGSVGElement>, isLeftPanel: boolean) => {
-    if (!isEditingPolygon || !selectedEditItem) return;
-    
-    // If we clicked directly on a handle circle, do not add a point
-    if ((e.target as SVGElement).tagName === 'circle') return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    let x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-    if (isLeftPanel) {
-      x = 100 - x;
-    }
-
-    setPolygons((prev) => {
-      const currentPoints = prev[selectedEditItem] || [];
-      return {
-        ...prev,
-        [selectedEditItem]: [
-          ...currentPoints,
-          { x: parseFloat(x.toFixed(1)), y: parseFloat(y.toFixed(1)) },
-        ],
-      };
-    });
-  };
-
-  const handleHandleMouseDown = (
-    e: React.MouseEvent<SVGCircleElement>,
-    itemId: string,
-    pointIndex: number,
-    isLeftPanel: boolean
-  ) => {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const svgElement = e.currentTarget.ownerSVGElement;
-    if (!svgElement) return;
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const rect = svgElement.getBoundingClientRect();
-      let x = ((moveEvent.clientX - rect.left) / rect.width) * 100;
-      let y = ((moveEvent.clientY - rect.top) / rect.height) * 100;
-
-      x = Math.max(0, Math.min(100, x));
-      y = Math.max(0, Math.min(100, y));
-
-      if (isLeftPanel) {
-        x = 100 - x;
-      }
-
-      setPolygons((prev) => {
-        const updated = [...(prev[itemId] || [])];
-        updated[pointIndex] = { x: parseFloat(x.toFixed(1)), y: parseFloat(y.toFixed(1)) };
-        return {
-          ...prev,
-          [itemId]: updated,
-        };
-      });
-    };
-
-    const handleMouseUp = () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleDeletePoint = (itemId: string, index: number) => {
-    setPolygons((prev) => {
-      const updated = [...(prev[itemId] || [])];
-      updated.splice(index, 1);
-      return {
-        ...prev,
-        [itemId]: updated,
-      };
-    });
-  };
-
   const handleBackgroundClick = () => {
-    if (isEditingPolygon) return;
     setSelectedItem(null);
     setPinnedPos(null);
   };
-
-  // Toggle debug panel with 'd' key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'd' || e.key === 'D') {
-        setShowDebug((prev) => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   return (
     <div className="relative w-screen h-screen bg-[#060606] font-sans overflow-hidden select-none" onClick={handleBackgroundClick}>
@@ -440,8 +334,8 @@ const App = () => {
             style={{
               backgroundImage: `url(${bg2})`,
               backgroundSize: 'auto 100%',
-              width: `calc(${aspectLeft} * 100vh)`,
-              right: `${leftOffset}px`,
+              width: `calc(${ASPECT_LEFT} * 100vh)`,
+              right: `${LEFT_OFFSET}px`,
             }}
           >
             {/* Grain Overlay - Sized directly to this specific div */}
@@ -452,7 +346,6 @@ const App = () => {
               className="absolute inset-0 w-full h-full pointer-events-auto z-10"
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
-              onClick={(e) => handleSvgClick(e, true)}
             >
               {Object.entries(polygons).map(([id, points]) => {
                 const pointsStr = getPointsString(points, true);
@@ -462,84 +355,34 @@ const App = () => {
                     points={pointsStr}
                     className="cursor-pointer"
                     style={{
-                      fill: isEditingPolygon && selectedEditItem === id
-                        ? 'rgba(234, 179, 8, 0.4)'
-                        : isEditingPolygon
-                        ? 'rgba(234, 179, 8, 0.15)'
-                        : 'transparent',
-                      stroke: isEditingPolygon
-                        ? selectedEditItem === id
-                          ? '#feec04'
-                          : 'rgba(234, 179, 8, 0.6)'
-                        : 'transparent',
-                      strokeWidth: isEditingPolygon ? 0.4 : 0,
-                      strokeDasharray: isEditingPolygon ? '1 1' : 'none',
+                      fill: 'transparent',
+                      stroke: 'transparent',
+                      strokeWidth: 0,
                     }}
                     onMouseEnter={() => {
-                      if (!isEditingPolygon) {
-                        setHoveredItem(items[id as keyof typeof items]);
-                      }
+                      setHoveredItem(items[id as keyof typeof items]);
                     }}
                     onMouseMove={(e) => {
-                      if (!isEditingPolygon) {
-                        setCursorPx({ x: e.clientX, y: e.clientY });
-                      }
+                      setCursorPx({ x: e.clientX, y: e.clientY });
                     }}
                     onMouseLeave={() => {
-                      if (!isEditingPolygon) {
-                        setHoveredItem(null);
-                        setCursorPx(null);
-                        // cursorPx clears on leave, but pinnedPos keeps the tooltip pinned if item was clicked
-                      }
+                      setHoveredItem(null);
+                      setCursorPx(null);
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (isEditingPolygon) {
-                        setSelectedEditItem(id);
+                      const isCurrentlyActive = selectedItem?.id === id;
+                      if (isCurrentlyActive) {
+                        setSelectedItem(null);
+                        setPinnedPos(null);
                       } else {
-                        const isCurrentlyActive = selectedItem?.id === id;
-                        if (isCurrentlyActive) {
-                          // Deselect: clear pin
-                          setSelectedItem(null);
-                          setPinnedPos(null);
-                        } else {
-                          // Select: pin the tooltip at current cursor position
-                          setSelectedItem(items[id as keyof typeof items]);
-                          setPinnedPos({ x: e.clientX, y: e.clientY });
-                        }
+                        setSelectedItem(items[id as keyof typeof items]);
+                        setPinnedPos({ x: e.clientX, y: e.clientY });
                       }
                     }}
                   />
                 );
               })}
-
-              {/* Drag handles for editing polygon - Left panel */}
-              {isEditingPolygon && selectedEditItem && (
-                <>
-                  {polygons[selectedEditItem]?.map((pt, index) => {
-                    const handleX = 100 - pt.x;
-                    const handleY = pt.y;
-
-                    return (
-                      <circle
-                        key={index}
-                        cx={handleX}
-                        cy={handleY}
-                        r="0.8"
-                        fill="#feec04"
-                        stroke="#000"
-                        strokeWidth="0.15"
-                        className="cursor-move hover:scale-125 transition-transform duration-150"
-                        onMouseDown={(e) => handleHandleMouseDown(e, selectedEditItem, index, true)}
-                        onContextMenu={(e) => {
-                          e.preventDefault();
-                          handleDeletePoint(selectedEditItem, index);
-                        }}
-                      />
-                    );
-                  })}
-                </>
-              )}
             </svg>
 
           </div>
@@ -558,8 +401,8 @@ const App = () => {
             style={{
               backgroundImage: `url(${bgImage})`,
               backgroundSize: 'auto 100%',
-              width: `calc(${aspectRight} * 100vh)`,
-              left: `${rightOffset}px`,
+              width: `calc(${ASPECT_RIGHT} * 100vh)`,
+              left: `${RIGHT_OFFSET}px`,
             }}
           >
             {/* Grain Overlay - Sized directly to this specific div */}
@@ -570,7 +413,6 @@ const App = () => {
               className="absolute inset-0 w-full h-full pointer-events-auto z-10"
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
-              onClick={(e) => handleSvgClick(e, false)}
             >
               {Object.entries(polygons).map(([id, points]) => {
                 const pointsStr = getPointsString(points, false);
@@ -580,81 +422,34 @@ const App = () => {
                     points={pointsStr}
                     className="cursor-pointer"
                     style={{
-                      fill: isEditingPolygon && selectedEditItem === id
-                        ? 'rgba(234, 179, 8, 0.4)'
-                        : isEditingPolygon
-                        ? 'rgba(234, 179, 8, 0.15)'
-                        : 'transparent',
-                      stroke: isEditingPolygon
-                        ? selectedEditItem === id
-                          ? '#feec04'
-                          : 'rgba(234, 179, 8, 0.6)'
-                        : 'transparent',
-                      strokeWidth: isEditingPolygon ? 0.4 : 0,
-                      strokeDasharray: isEditingPolygon ? '1 1' : 'none',
+                      fill: 'transparent',
+                      stroke: 'transparent',
+                      strokeWidth: 0,
                     }}
                     onMouseEnter={() => {
-                      if (!isEditingPolygon) {
-                        setHoveredItem(items[id as keyof typeof items]);
-                      }
+                      setHoveredItem(items[id as keyof typeof items]);
                     }}
                     onMouseMove={(e) => {
-                      if (!isEditingPolygon) {
-                        setCursorPx({ x: e.clientX, y: e.clientY });
-                      }
+                      setCursorPx({ x: e.clientX, y: e.clientY });
                     }}
                     onMouseLeave={() => {
-                      if (!isEditingPolygon) {
-                        setHoveredItem(null);
-                        setCursorPx(null);
-                        // pinnedPos keeps the tooltip visible if the item was clicked
-                      }
+                      setHoveredItem(null);
+                      setCursorPx(null);
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (isEditingPolygon) {
-                        setSelectedEditItem(id);
+                      const isCurrentlyActive = selectedItem?.id === id;
+                      if (isCurrentlyActive) {
+                        setSelectedItem(null);
+                        setPinnedPos(null);
                       } else {
-                        const isCurrentlyActive = selectedItem?.id === id;
-                        if (isCurrentlyActive) {
-                          // Deselect: clear pin
-                          setSelectedItem(null);
-                          setPinnedPos(null);
-                        } else {
-                          // Select: pin the tooltip at current cursor position
-                          setSelectedItem(items[id as keyof typeof items]);
-                          setPinnedPos({ x: e.clientX, y: e.clientY });
-                        }
+                        setSelectedItem(items[id as keyof typeof items]);
+                        setPinnedPos({ x: e.clientX, y: e.clientY });
                       }
                     }}
                   />
                 );
               })}
-
-              {/* Drag handles for editing polygon - Right panel */}
-              {isEditingPolygon && selectedEditItem && (
-                <>
-                  {polygons[selectedEditItem]?.map((pt, index) => {
-                    return (
-                      <circle
-                        key={index}
-                        cx={pt.x}
-                        cy={pt.y}
-                        r="0.8"
-                        fill="#feec04"
-                        stroke="#000"
-                        strokeWidth="0.15"
-                        className="cursor-move hover:scale-125 transition-transform duration-150"
-                        onMouseDown={(e) => handleHandleMouseDown(e, selectedEditItem, index, false)}
-                        onContextMenu={(e) => {
-                          e.preventDefault();
-                          handleDeletePoint(selectedEditItem, index);
-                        }}
-                      />
-                    );
-                  })}
-                </>
-              )}
             </svg>
 
           </div>
@@ -678,7 +473,7 @@ const App = () => {
    
       <img
         src={yellowSvg}
-        className="absolute top-[-10%] left-0  pointer-events-none z-0 opacity-100"
+        className="absolute top-[-10%] left-[-5%]  pointer-events-none z-0 opacity-100"
         style={{
           width: '1133px',
           height: '451px',
@@ -828,285 +623,6 @@ const App = () => {
 
       </div>
 
-      {/* Debug Control Panel (Press 'd' to toggle) */}
-      {showDebug && (
-        <div 
-          className="fixed bottom-4 left-4 z-50 bg-black/90 text-white p-6 rounded-xl border border-white/20 w-96 text-xs max-h-[85vh] overflow-y-auto shadow-2xl pointer-events-auto"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <h3 className="font-bold text-sm mb-4 border-b border-white/20 pb-2 flex justify-between">
-            <span>Alignment & Polygon Editor</span>
-            <button onClick={() => setShowDebug(false)} className="text-red-400 cursor-pointer">Close</button>
-          </h3>
-
-          <div className="space-y-4">
-            {/* Split Toggle */}
-            <div className="flex justify-between items-center bg-white/5 p-2 rounded">
-              <span>View Mode:</span>
-              <button
-                onClick={() => setIsSplit(!isSplit)}
-                className="bg-yellow-400 text-black px-3 py-1 rounded font-bold cursor-pointer"
-              >
-                {isSplit ? 'Split 50/50' : 'Default View'}
-              </button>
-            </div>
-
-            {/* Left Image Offset */}
-            <div>
-              <div className="flex justify-between mb-1">
-                <span>Left Image Offset (X):</span>
-                <span className="font-mono text-yellow-400 font-bold">{leftOffset}px</span>
-              </div>
-              <input
-                type="range" min="-300" max="300" step="1"
-                value={leftOffset}
-                onChange={(e) => setLeftOffset(Number(e.target.value))}
-                className="w-full accent-yellow-400"
-              />
-            </div>
-
-            {/* Right Image Offset */}
-            <div>
-              <div className="flex justify-between mb-1">
-                <span>Right Image Offset (X):</span>
-                <span className="font-mono text-yellow-400 font-bold">{rightOffset}px</span>
-              </div>
-              <input
-                type="range" min="-300" max="300" step="1"
-                value={rightOffset}
-                onChange={(e) => setRightOffset(Number(e.target.value))}
-                className="w-full accent-yellow-400"
-              />
-            </div>
-
-            {/* Left Aspect Ratio */}
-            <div>
-              <div className="flex justify-between mb-1">
-                <span>Left Image Aspect:</span>
-                <span className="font-mono text-yellow-400 font-bold">{aspectLeft}</span>
-              </div>
-              <input
-                type="range" min="1.0" max="1.5" step="0.001"
-                value={aspectLeft}
-                onChange={(e) => setAspectLeft(Number(e.target.value))}
-                className="w-full accent-yellow-400"
-              />
-            </div>
-
-            {/* Right Aspect Ratio */}
-            <div>
-              <div className="flex justify-between mb-1">
-                <span>Right Image Aspect:</span>
-                <span className="font-mono text-yellow-400 font-bold">{aspectRight}</span>
-              </div>
-              <input
-                type="range" min="1.0" max="1.5" step="0.001"
-                value={aspectRight}
-                onChange={(e) => setAspectRight(Number(e.target.value))}
-                className="w-full accent-yellow-400"
-              />
-            </div>
-
-            {/* Hotspots Positions (Add to Cart tooltip anchors) */}
-            <div className="border-t border-white/10 pt-3">
-              <h4 className="font-bold mb-2">Button Anchor Positions (%):</h4>
-
-              {/* Chair Hotspot */}
-              <div className="space-y-1 mb-2">
-                <div className="flex justify-between">
-                  <span>Chair Position:</span>
-                  <span className="font-mono text-yellow-400">X: {chairX}%, Y: {chairY}%</span>
-                </div>
-                <input
-                  type="range" min="0" max="100" step="0.1"
-                  value={chairX}
-                  onChange={(e) => setChairX(Number(e.target.value))}
-                  className="w-full accent-yellow-400"
-                />
-                <input
-                  type="range" min="0" max="100" step="0.1"
-                  value={chairY}
-                  onChange={(e) => setChairY(Number(e.target.value))}
-                  className="w-full accent-yellow-400"
-                />
-              </div>
-
-              {/* Vase Hotspot */}
-              <div className="space-y-1 mb-2">
-                <div className="flex justify-between">
-                  <span>Vase Position:</span>
-                  <span className="font-mono text-yellow-400">X: {vaseX}%, Y: {vaseY}%</span>
-                </div>
-                <input
-                  type="range" min="0" max="100" step="0.1"
-                  value={vaseX}
-                  onChange={(e) => setVaseX(Number(e.target.value))}
-                  className="w-full accent-yellow-400"
-                />
-                <input
-                  type="range" min="0" max="100" step="0.1"
-                  value={vaseY}
-                  onChange={(e) => setVaseY(Number(e.target.value))}
-                  className="w-full accent-yellow-400"
-                />
-              </div>
-
-              {/* Frame Hotspot */}
-              <div className="space-y-1 mb-2">
-                <div className="flex justify-between">
-                  <span>Frame Position:</span>
-                  <span className="font-mono text-yellow-400">X: {frameX}%, Y: {frameY}%</span>
-                </div>
-                <input
-                  type="range" min="0" max="100" step="0.1"
-                  value={frameX}
-                  onChange={(e) => setFrameX(Number(e.target.value))}
-                  className="w-full accent-yellow-400"
-                />
-                <input
-                  type="range" min="0" max="100" step="0.1"
-                  value={frameY}
-                  onChange={(e) => setFrameY(Number(e.target.value))}
-                  className="w-full accent-yellow-400"
-                />
-              </div>
-
-              {/* Table Hotspot */}
-              <div className="space-y-1">
-                <div className="flex justify-between">
-                  <span>Table Position:</span>
-                  <span className="font-mono text-yellow-400">X: {tableX}%, Y: {tableY}%</span>
-                </div>
-                <input
-                  type="range" min="0" max="100" step="0.1"
-                  value={tableX}
-                  onChange={(e) => setTableX(Number(e.target.value))}
-                  className="w-full accent-yellow-400"
-                />
-                <input
-                  type="range" min="0" max="100" step="0.1"
-                  value={tableY}
-                  onChange={(e) => setTableY(Number(e.target.value))}
-                  className="w-full accent-yellow-400"
-                />
-              </div>
-            </div>
-
-            {/* Polygon Hitbox Editor Controls */}
-            <div className="border-t border-white/10 pt-3 mt-3">
-              <h4 className="font-bold mb-2 flex justify-between items-center text-yellow-400">
-                <span>Polygon Hitbox Editor</span>
-                <span className="text-[10px] text-white/50">(Double-click edge or click SVG to add, right-click point to delete)</span>
-              </h4>
-
-              {/* Edit Toggle */}
-              <div className="flex justify-between items-center bg-white/5 p-2 rounded mb-2">
-                <span>Edit Mode:</span>
-                <button
-                  onClick={() => setIsEditingPolygon(!isEditingPolygon)}
-                  className={`px-3 py-1 rounded font-bold transition-colors cursor-pointer ${
-                    isEditingPolygon ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
-                  }`}
-                >
-                  {isEditingPolygon ? 'EDITING ON' : 'EDITING OFF'}
-                </button>
-              </div>
-
-              {isEditingPolygon && (
-                <div className="space-y-3 bg-white/5 p-2 rounded">
-                  {/* Select Item to Edit */}
-                  <div>
-                    <label className="block mb-1 font-semibold">Active Item:</label>
-                    <select
-                      value={selectedEditItem}
-                      onChange={(e) => setSelectedEditItem(e.target.value)}
-                      className="w-full bg-black border border-white/20 p-1.5 rounded text-white font-semibold cursor-pointer"
-                    >
-                      <option value="chair">Chair (Yellow Armchair)</option>
-                      <option value="vase">Vase (Baso Uno & Pedestal)</option>
-                      <option value="frame">Frame (Milano Linea Frame)</option>
-                      <option value="table">Table (Vetra Console)</option>
-                    </select>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        setPolygons(prev => ({
-                          ...prev,
-                          [selectedEditItem]: []
-                        }));
-                      }}
-                      className="flex-1 bg-red-600 hover:bg-red-700 text-white py-1 rounded font-semibold cursor-pointer text-center"
-                    >
-                      Clear Points
-                    </button>
-                    <button
-                      onClick={() => {
-                        setPolygons(prev => {
-                          const updated = [...(prev[selectedEditItem] || [])];
-                          updated.pop();
-                          return {
-                            ...prev,
-                            [selectedEditItem]: updated
-                          };
-                        });
-                      }}
-                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-1 rounded font-semibold cursor-pointer text-center"
-                    >
-                      Undo Point
-                    </button>
-                  </div>
-
-                  {/* Vertex Points List */}
-                  <div>
-                    <span className="font-semibold block mb-1">
-                      Vertices ({polygons[selectedEditItem]?.length || 0}):
-                    </span>
-                    <div className="max-h-24 overflow-y-auto border border-white/10 rounded p-1 space-y-1 bg-black/40">
-                      {polygons[selectedEditItem]?.map((pt, idx) => (
-                        <div key={idx} className="flex justify-between items-center text-[10px] font-mono hover:bg-white/5 px-1 rounded">
-                          <span>Pt {idx + 1}: X: {pt.x}%, Y: {pt.y}%</span>
-                          <button
-                            onClick={() => handleDeletePoint(selectedEditItem, idx)}
-                            className="text-red-400 hover:text-red-600 font-bold px-1"
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* JSON Exporter */}
-              <div className="mt-3">
-                <span className="font-semibold block mb-1">Export Coordinates JSON:</span>
-                <textarea
-                  readOnly
-                  value={JSON.stringify(polygons, null, 2)}
-                  onClick={(e) => {
-                    const el = e.target as HTMLTextAreaElement;
-                    el.select();
-                    navigator.clipboard.writeText(el.value);
-                  }}
-                  className="w-full h-24 bg-black border border-white/20 p-2 rounded text-[10px] font-mono text-green-400 cursor-pointer"
-                  title="Click to select all and copy"
-                  placeholder="Polygon coordinates JSON"
-                />
-                <span className="text-[9px] text-white/40 mt-1 block">Click text box to select all and copy coordinates.</span>
-              </div>
-            </div>
-
-            <div className="bg-white/5 p-2 rounded text-[10px] font-mono leading-normal">
-              <p>Current Seam: {splitPercent.toFixed(1)}%</p>
-              <p>Default Seam: {defaultSplit.toFixed(1)}%</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
