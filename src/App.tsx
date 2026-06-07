@@ -175,7 +175,7 @@ const App = () => {
   const splitPercent = isSplit ? 50 : defaultSplit;
 
   // Polygon Coordinates and Edit States
-  const [polygons, setPolygons] = useState<{ [key: string]: { x: number; y: number }[] }>({
+  const [polygons] = useState<{ [key: string]: { x: number; y: number }[] }>({
  
   "chair": [
     {
