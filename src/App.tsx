@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import bgImage from './assets/bg.png';
 import bg2 from './assets/bg2.png';
 import logo from './assets/logo.png';
+import yellowSvg from './assets/yellow.svg';
+
 
 const ItemTooltip = ({
   screenX,
@@ -672,9 +674,19 @@ const App = () => {
       {/* Shadow Overlay for the whole viewport to merge with dark sidebar */}
       {/* <div className="absolute inset-0 bg-linear-to-r from-black from-25% via-33% to-50% via-black/40 to-transparent pointer-events-none z-0"></div> */}
 
-   <div className="absolute inset-0 bg-linear-to-r from-[#21241E] from-25% via-33% to-50% via-[#24251D00] to-transparent pointer-events-none z-0"></div>
+      <div className="absolute inset-0 bg-linear-to-r from-[#21241E] from-25% via-55% to-50% via-[#24251D00] to-transparent pointer-events-none z-0"></div>
    
-      <div className="absolute top-0 left-0 w-150 h-150 bg-yellow-400/5 rounded-full blur-[140px] pointer-events-none z-0"></div>
+      <img
+        src={yellowSvg}
+        className="absolute top-[-10%] left-0  pointer-events-none z-0 opacity-100"
+        style={{
+          width: '1133px',
+          height: '451px',
+          mixBlendMode: 'plus-lighter',
+        }}
+        alt=""
+      />
+   
 
       {/* UI Overlay Container */}
       <div className="fixed inset-0 z-10 pointer-events-none flex flex-col justify-between p-8">
