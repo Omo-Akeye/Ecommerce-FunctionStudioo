@@ -353,7 +353,7 @@ const App = () => {
                   <polygon
                     key={id}
                     points={pointsStr}
-                    className="cursor-pointer"
+                    className="cursor-none"
                     style={{
                       fill: 'transparent',
                       stroke: 'transparent',
@@ -378,6 +378,7 @@ const App = () => {
                       } else {
                         setSelectedItem(items[id as keyof typeof items]);
                         setPinnedPos({ x: e.clientX, y: e.clientY });
+                        setCartCount(c => c + 1);
                       }
                     }}
                   />
@@ -420,7 +421,7 @@ const App = () => {
                   <polygon
                     key={id}
                     points={pointsStr}
-                    className="cursor-pointer"
+                    className="cursor-none"
                     style={{
                       fill: 'transparent',
                       stroke: 'transparent',
@@ -445,6 +446,7 @@ const App = () => {
                       } else {
                         setSelectedItem(items[id as keyof typeof items]);
                         setPinnedPos({ x: e.clientX, y: e.clientY });
+                        setCartCount(c => c + 1);
                       }
                     }}
                   />
@@ -484,7 +486,7 @@ const App = () => {
    
 
       {/* UI Overlay Container */}
-      <div className="fixed inset-0 z-10 pointer-events-none flex flex-col justify-between p-8">
+      <div className="fixed inset-0 z-10 pointer-events-none flex flex-col justify-between p-8 max-xl:pb-6">
 
         {/* Top Section: Logo, Sidebar Nav, and Split Toggle Button */}
         <div className="flex justify-between items-start w-full">
@@ -521,7 +523,7 @@ const App = () => {
 
             {/* Vertical Menu */}
             <div
-              className="ml-4 flex flex-col pointer-events-auto absolute top-0 left-[10%] w-48 h-[500px] overflow-hidden pt-4"
+              className="ml-4 flex flex-col pointer-events-auto absolute top-0 xl:left-[10%] left-[15%] w-48 h-[60%] xl:h-[65%] overflow-hidden pt-4"
               style={{
                 background: 'linear-gradient(179.98deg, #E0E0CF 54.59%, rgba(255, 255, 255, 0) 79.5%)',
                 backdropFilter: 'blur(12px)',
@@ -529,7 +531,7 @@ const App = () => {
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <ul className="flex flex-col py-6 px-6 gap-6">
+              <ul className="flex flex-col py-6 px-6 gap-5">
                 {[
                   { id: '01', name: 'HOME', active: true },
                   { id: '02', name: 'SHOWROOM', active: false },
@@ -539,8 +541,8 @@ const App = () => {
                   { id: '06', name: 'CONTACT US', active: false },
                 ].map((item) => (
                   <li key={item.id} className="flex items-center text-xs font-semibold tracking-widest cursor-pointer group gap-2">
-                    <span className="text-[#00000052] group-hover:text-yellow-400 transition-colors duration-200">{item.id}</span>
-                    <span className={`${item.active ? 'text-[#9A7700]' : 'text-black'} group-hover:text-[#9A7700] transition-colors duration-200 flex items-center gap-2`}>
+                    <span className="text-[#00000052]  duration-200">{item.id}</span>
+                    <span className={`${item.active ? 'text-[#9A7700]' : 'text-black'} group-hover:text-[#9A7700] transition-colors duration-200 flex items-center gap-2 mt-1.5`}>
                       {item.name}
                       <span className={`${item.active ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-200`}>
                         <svg width="11" height="9" viewBox="0 0 11 9" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -593,11 +595,11 @@ const App = () => {
                 transition={{ duration: 0.4 }}
                 className="flex flex-col"
               >
-                <h2 className="text-white text-[45.73px] font-semibold leading-[100%] tracking-[-4%] uppercase">
+                <h2 className="text-white xl:text-[45.73px] text-[40px] font-semibold leading-[100%] tracking-[-4%] uppercase">
                   {displayItem.title}
 
                 </h2>
-                <h1 className="text-white text-[245.7px] font-serif font-normal leading-[100%] tracking-[-0.04em] italic mt-2">
+                <h1 className="text-white xl:text-[245.7px] text-[200px] font-serif font-normal leading-[100%] tracking-[-0.04em] italic mt-2">
                   {displayItem.price}
                 </h1>
               </motion.div>
