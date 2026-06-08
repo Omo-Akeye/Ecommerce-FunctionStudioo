@@ -358,6 +358,7 @@ const App = () => {
                       fill: 'transparent',
                       stroke: 'transparent',
                       strokeWidth: 0,
+                      pointerEvents: isSplit ? 'auto' : 'none',
                     }}
                     onMouseEnter={() => {
                       setHoveredItem(items[id as keyof typeof items]);
@@ -531,7 +532,7 @@ const App = () => {
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <ul className="flex flex-col py-6 px-6 gap-5">
+              <ul className="flex flex-col py-5 px-6 gap-5">
                 {[
                   { id: '01', name: 'HOME', active: true },
                   { id: '02', name: 'SHOWROOM', active: false },
