@@ -543,7 +543,7 @@ onClick={(e) => {
 
             {/* Vertical Menu */}
             <div
-              className="ml-4 flex flex-col pointer-events-auto absolute top-0 xl:left-[10%] left-[15%] w-48 h-[60%] xl:h-[65%] overflow-hidden pt-4"
+              className="ml-4 flex flex-col pointer-events-auto absolute top-0 xl:left-[10%] left-[15%] w-48 h-[60%] xl:max-h-146.75 overflow-hidden pt-4"
               style={{
                 background: 'linear-gradient(179.98deg, #E0E0CF 54.59%, rgba(255, 255, 255, 0) 79.5%)',
                 backdropFilter: 'blur(12px)',
@@ -561,7 +561,7 @@ onClick={(e) => {
                   { id: '06', name: 'CONTACT US', active: false },
                 ].map((item) => (
                   <li key={item.id} className="flex items-center text-xs font-semibold tracking-widest cursor-pointer group gap-2">
-                    <span className="text-[#00000052]  duration-200">{item.id}</span>
+                    <span className="text-[#00000052]  duration-200 xl:mr-2">{item.id}</span>
                     <span className={`${item.active ? 'text-[#9A7700]' : 'text-black'} group-hover:text-[#9A7700] transition-colors duration-200 flex items-center gap-2 mt-2`}>
                       {item.name}
                       <span className={`${item.active ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-200`}>
