@@ -33,7 +33,7 @@ const ItemTooltip = ({
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.15 }}
-          className="fixed z-[100] pointer-events-auto w-38.75 bg-[#0000008F] backdrop-blur-[7.61px] text-black p-4 rounded-[57px]"
+          className="fixed z-100 pointer-events-auto w-38.75 bg-[#0000008F] backdrop-blur-[7.61px] text-black p-4 rounded-[57px]"
           style={{
             left: clampedX,
             top: clampedY,
@@ -133,6 +133,7 @@ const App = () => {
   const [selectedItem, setSelectedItem] = useState<{ id: string, title: string, subtitle?: string, price: string } | null>(null);
   const [hoveredItem, setHoveredItem] = useState<{ id: string, title: string, subtitle?: string, price: string } | null>(null);
   const [cartCount, setCartCount] = useState(0);
+  const justAddedRef = useRef(false);
 
   const displayItem = hoveredItem || selectedItem;
 
@@ -360,28 +361,36 @@ const App = () => {
                       strokeWidth: 0,
                       pointerEvents: isSplit ? 'auto' : 'none',
                     }}
+                    // onMouseEnter={() => {
+                    //   setHoveredItem(items[id as keyof typeof items]);
+                    // }}
                     onMouseEnter={() => {
-                      setHoveredItem(items[id as keyof typeof items]);
-                    }}
-                    onMouseMove={(e) => {
-                      setCursorPx({ x: e.clientX, y: e.clientY });
-                    }}
-                    onMouseLeave={() => {
-                      setHoveredItem(null);
-                      setCursorPx(null);
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const isCurrentlyActive = selectedItem?.id === id;
-                      if (isCurrentlyActive) {
-                        setSelectedItem(null);
-                        setPinnedPos(null);
-                      } else {
-                        setSelectedItem(items[id as keyof typeof items]);
-                        setPinnedPos({ x: e.clientX, y: e.clientY });
-                        setCartCount(c => c + 1);
-                      }
-                    }}
+  if (justAddedRef.current) return;
+  setHoveredItem(items[id as keyof typeof items]);
+}}
+                   onMouseMove={(e) => {
+  if (justAddedRef.current) return;  // ← add this guard
+  setCursorPx({ x: e.clientX, y: e.clientY });
+}}
+                  onMouseLeave={() => {
+  setHoveredItem(null);
+  setCursorPx(null);
+}}
+onClick={(e) => {
+  e.stopPropagation();
+  setCartCount(c => c + 1);
+  justAddedRef.current = true;
+
+  // Clear everything immediately so tooltip disappears right away
+  setHoveredItem(null);
+  setCursorPx(null);
+  setSelectedItem(null);
+  setPinnedPos(null);
+
+  setTimeout(() => {
+    justAddedRef.current = false;
+  }, 600);
+}}
                   />
                 );
               })}
@@ -428,28 +437,38 @@ const App = () => {
                       stroke: 'transparent',
                       strokeWidth: 0,
                     }}
-                    onMouseEnter={() => {
-                      setHoveredItem(items[id as keyof typeof items]);
-                    }}
+                    // onMouseEnter={() => {
+                    //   setHoveredItem(items[id as keyof typeof items]);
+                    // }}
+                   onMouseEnter={() => {
+  if (justAddedRef.current) return;
+  setHoveredItem(items[id as keyof typeof items]);
+}}
                     onMouseMove={(e) => {
-                      setCursorPx({ x: e.clientX, y: e.clientY });
-                    }}
-                    onMouseLeave={() => {
-                      setHoveredItem(null);
-                      setCursorPx(null);
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const isCurrentlyActive = selectedItem?.id === id;
-                      if (isCurrentlyActive) {
-                        setSelectedItem(null);
-                        setPinnedPos(null);
-                      } else {
-                        setSelectedItem(items[id as keyof typeof items]);
-                        setPinnedPos({ x: e.clientX, y: e.clientY });
-                        setCartCount(c => c + 1);
-                      }
-                    }}
+  if (justAddedRef.current) return;  // ← add this guard
+  setCursorPx({ x: e.clientX, y: e.clientY });
+}}
+  
+                  
+                   onMouseLeave={() => {
+  setHoveredItem(null);
+  setCursorPx(null);
+}}
+onClick={(e) => {
+  e.stopPropagation();
+  setCartCount(c => c + 1);
+  justAddedRef.current = true;
+
+  // Clear everything immediately so tooltip disappears right away
+  setHoveredItem(null);
+  setCursorPx(null);
+  setSelectedItem(null);
+  setPinnedPos(null);
+
+  setTimeout(() => {
+    justAddedRef.current = false;
+  }, 600);
+}}
                   />
                 );
               })}
@@ -543,7 +562,7 @@ const App = () => {
                 ].map((item) => (
                   <li key={item.id} className="flex items-center text-xs font-semibold tracking-widest cursor-pointer group gap-2">
                     <span className="text-[#00000052]  duration-200">{item.id}</span>
-                    <span className={`${item.active ? 'text-[#9A7700]' : 'text-black'} group-hover:text-[#9A7700] transition-colors duration-200 flex items-center gap-2 mt-1.5`}>
+                    <span className={`${item.active ? 'text-[#9A7700]' : 'text-black'} group-hover:text-[#9A7700] transition-colors duration-200 flex items-center gap-2 mt-2`}>
                       {item.name}
                       <span className={`${item.active ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-200`}>
                         <svg width="11" height="9" viewBox="0 0 11 9" fill="none" xmlns="http://www.w3.org/2000/svg">
