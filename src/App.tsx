@@ -578,9 +578,12 @@ onClick={(e) => {
   {isMenuOpen && (
     <motion.div
       key="menu"
-      initial={{ opacity: 0, x: -24 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -24 }}
+      // initial={{ opacity: 0, x: -24 }}
+      // animate={{ opacity: 1, x: 0 }}
+      // exit={{ opacity: 0, x: -24 }}
+      initial={{ opacity: 0, y: -16 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -16 }}
       transition={{ type: 'spring', stiffness: 260, damping: 28 }}
       className="ml-4 flex flex-col pointer-events-auto absolute top-0 xl:left-[10%] left-[15%] w-48 h-[60%] xl:max-h-146.75 overflow-hidden pt-4"
       style={{
