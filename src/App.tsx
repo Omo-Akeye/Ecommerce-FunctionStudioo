@@ -558,7 +558,7 @@ onClick={(e) => {
                   { id: '03', name: 'COLLECTIONS', active: false },
                   { id: '04', name: 'PROMO', active: false },
                   { id: '05', name: 'PROJECTS', active: false },
-                  { id: '06', name: 'CONTACT US', active: false },
+                  { id: '06', name: 'CONTACT', active: false },
                 ].map((item) => (
                   <li key={item.id} className="flex items-center text-xs font-semibold tracking-widest cursor-pointer group gap-2">
                     <span className="text-[#00000052]  duration-200 xl:mr-2">{item.id}</span>
