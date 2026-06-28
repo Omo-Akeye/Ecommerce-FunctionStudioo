@@ -75,13 +75,26 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty }: SidebarCartPro
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 pointer-events-auto"
             style={{
-              background: 'linear-gradient(271.54deg, rgba(36, 37, 29, 0) 14.02%, #21241E 73.3%)',
+              background: 'linear-gradient(271.54deg, rgba(33, 36, 30, 0.85) 0%, #151713 100%)',
             }}
             onClick={(e) => {
               e.stopPropagation();
               onClose();
             }}
           />
+
+          {/* Bottom text on the overlay */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3 }}
+            className="fixed left-8 bottom-8 max-xl:bottom-6 right-129 max-w-7xl z-45 pointer-events-none hidden md:block"
+          >
+            <p className="text-[#FFFFFFA3] text-xs font-sans font-light leading-relaxed text-left tracking-[-6%]">
+              Since 1925, we've believed that true luxury is never rushed—it is patiently shaped, refined, and perfected over generations. Every curve is intentional, every material carefully chosen, and every detail crafted to stand the test of time. Rooted in Italy's rich design heritage, our collections celebrate the harmony of timeless craftsmanship and contemporary living. More than furniture, each piece carries a legacy of artistry, bringing warmth, elegance, and enduring character into the homes where life's most meaningful moments unfold.
+            </p>
+          </motion.div>
 
           {/* Sidebar Container */}
           <motion.div

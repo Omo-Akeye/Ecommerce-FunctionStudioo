@@ -5,6 +5,7 @@ import bg2 from './assets/bg2.png';
 import logo from './assets/logo.png';
 import yellowSvg from './assets/yellow.svg';
 import { SidebarCart } from './SidebarCart';
+import { MobileGate } from './MobileGate';
 
 
 const ItemTooltip = ({
@@ -343,6 +344,9 @@ const App = () => {
 
   return (
     <div className="relative w-screen h-screen bg-[#060606] font-sans overflow-hidden select-none" onClick={handleBackgroundClick}>
+
+      {/* Mobile / tablet gate — hidden on lg+ */}
+      <MobileGate />
 
       {/* Background Panels */}
       <div className="absolute inset-0 z-0">
