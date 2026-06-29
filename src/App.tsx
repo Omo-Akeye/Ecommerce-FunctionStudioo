@@ -142,11 +142,16 @@ const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const addToCart = (id: string) => {
-    setCart((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 0) + 1,
-    }));
-    setIsCartOpen(true);
+    setCart((prev) => {
+      const isCurrentlyEmpty = Object.values(prev).reduce((sum, qty) => sum + qty, 0) === 0;
+      if (isCurrentlyEmpty) {
+        setIsCartOpen(true);
+      }
+      return {
+        ...prev,
+        [id]: (prev[id] || 0) + 1,
+      };
+    });
   };
 
   const updateQty = (id: string, delta: number) => {
@@ -161,6 +166,10 @@ const App = () => {
   };
 
 
+
+  const clearCart = () => {
+    setCart({});
+  };
 
   const displayItem = hoveredItem || selectedItem;
 
@@ -739,6 +748,7 @@ onClick={(e) => {
         onClose={() => setIsCartOpen(false)}
         cart={cart}
         updateQty={updateQty}
+        clearCart={clearCart}
       />
 
     </div>
