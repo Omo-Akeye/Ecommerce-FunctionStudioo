@@ -1,9 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import chairImg from './assets/chair.png';
-import consoleImg from './assets/console.png';
-import frameImg from './assets/frame.png';
-import stoodImg from './assets/stood.png';
-import emptyCartImg from './assets/emptycart.png';
+import emptyCartImg from '../assets/emptycart.png';
+import { CartItem, formatPrice } from '../components/CartItem';
+import { itemsInfo } from '../data';
+import { getTotalPrice, getIsCartEmpty } from '../cartUtils';
 
 export interface SidebarCartProps {
   isOpen: boolean;
@@ -13,62 +12,15 @@ export interface SidebarCartProps {
   clearCart: () => void;
 }
 
-const itemsInfo: {
-  [key: string]: {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    image: string;
-  };
-} = {
-  chair: {
-    id: 'chair',
-    title: 'Atelier Elowen Venta Chair',
-    description: 'A contemporary Italian lounge chair featuring premium upholstery, plush cushioning, and sleek black wooden legs for exceptional comfort and timeless style.',
-    price: 1200,
-    image: chairImg,
-  },
-  vase: {
-    id: 'vase',
-    title: 'Basso Uno Stood',
-    description: 'A Handcrafted Ceramic Vase With An Organic Textured Surface, A Warm Matte Finish, And Sophisticated Silhouettes Perfect For Modern Accents.',
-    price: 550,
-    image: stoodImg,
-  },
-  frame: {
-    id: 'frame',
-    title: 'Milano Linea Framento',
-    description: 'A Minimalist Fine Art Frame Featuring A Solid Oak Border, Museum-Grade Acrylic Glazing, And Elegant Mount Details.',
-    price: 400,
-    image: frameImg,
-  },
-  table: {
-    id: 'table',
-    title: 'Vetra Console',
-    description: 'A minimalist Italian TV console with a matte white finish, open shelving, concealed storage, and elegant gold metal legs.',
-    price: 2500,
-    image: consoleImg,
-  },
-};
-
-const formatPrice = (price: number) => {
-  return `$${price.toFixed(2)}`;
-};
-
 export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: SidebarCartProps) => {
-  const totalPrice = Object.entries(cart).reduce((sum, [id, qty]) => {
-    const item = itemsInfo[id];
-    return sum + (item ? item.price * qty : 0);
-  }, 0);
-
-  const isCartEmpty = Object.values(cart).reduce((sum, qty) => sum + qty, 0) === 0;
+  const totalPrice = getTotalPrice(cart);
+  const isCartEmpty = getIsCartEmpty(cart);
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Dark Overlay with custom gradient background */}
+         
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -84,7 +36,7 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
             }}
           />
 
-          {/* Bottom text on the overlay */}
+     
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -127,7 +79,7 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                     </button>
                     {/* Yellow pill tooltip */}
                     <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-[#FEEC04] text-[#1C1A1B] text-[11px] font-sans font-bold py-1.5 px-4 rounded-full shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
-                      {/* Arrow pointer */}
+           
                       <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#FEEC04] rotate-45" />
                       <span className="relative z-10">Clear cart</span>
                     </div>
@@ -173,42 +125,13 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                     const itemInfo = itemsInfo[id];
                     if (!itemInfo) return null;
                     return (
-                      <div key={id} className="pt-8.25 px-8 pb-7.5 border-b border-[#FFFFFF29] flex flex-col">
-                        <h4 className="text-white text-lg font-medium mb-4.5 text-left">
-                          {itemInfo.title}
-                        </h4>
-                        <div className="w-full flex justify-center mb-6.5">
-                          <img
-                            src={itemInfo.image}
-                            alt={itemInfo.title}
-                            className={id === 'table' ? "" : "max-h-26 w-full object-contain"}
-                            style={id === 'table' ? { width: '130px', height: '49px', objectFit: 'contain' } : undefined}
-                          />
-                        </div>
-                        <p className="text-sm text-[#FFFFFF8F] font-light tracking-[-4%] mb-4 text-left">
-                          {itemInfo.description}
-                        </p>
-                        <div className="text-white font-serif italic text-2xl mb-3 text-left">
-                          {formatPrice(itemInfo.price)}
-                        </div>
-                        <div className="flex items-center gap-4.5 text-left">
-                          <button
-                            onClick={() => updateQty(id, -1)}
-                            className="w-8 h-8 rounded-full bg-[#21241E] hover:bg-black/40 flex items-center justify-center text-white transition-colors cursor-pointer text-lg font-medium select-none"
-                          >
-                            &minus;
-                          </button>
-                          <span className="text-white text-lg font-medium select-none w-4 text-center">
-                            {qty}
-                          </span>
-                          <button
-                            onClick={() => updateQty(id, 1)}
-                            className="w-8 h-8 rounded-full bg-[#21241E] hover:bg-black/40 flex items-center justify-center text-white transition-colors cursor-pointer text-lg font-medium select-none"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
+                      <CartItem
+                        key={id}
+                        item={itemInfo}
+                        qty={qty}
+                        onDecrement={() => updateQty(id, -1)}
+                        onIncrement={() => updateQty(id, 1)}
+                      />
                     );
                   })}
                 </div>

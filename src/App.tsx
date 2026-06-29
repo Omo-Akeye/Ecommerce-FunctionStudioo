@@ -4,8 +4,9 @@ import bgImage from './assets/bg.png';
 import bg2 from './assets/bg2.png';
 import logo from './assets/logo.png';
 import yellowSvg from './assets/yellow.svg';
-import { SidebarCart } from './SidebarCart';
-import { MobileGate } from './MobileGate';
+import { SidebarCart } from './components/SidebarCart';
+import { MobileGate } from './components/MobileGate';
+import { getCartCount, addItem, updateItem, clearItems } from './cartUtils';
 
 
 const ItemTooltip = ({
@@ -137,38 +138,24 @@ const App = () => {
   const [hoveredItem, setHoveredItem] = useState<{ id: string, title: string, subtitle?: string, price: string } | null>(null);
   const [cart, setCart] = useState<{ [key: string]: number }>({});
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const cartCount = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+  const cartCount = getCartCount(cart);
   const justAddedRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const addToCart = (id: string) => {
     setCart((prev) => {
-      const isCurrentlyEmpty = Object.values(prev).reduce((sum, qty) => sum + qty, 0) === 0;
-      if (isCurrentlyEmpty) {
-        setIsCartOpen(true);
-      }
-      return {
-        ...prev,
-        [id]: (prev[id] || 0) + 1,
-      };
+      const isCurrentlyEmpty = getCartCount(prev) === 0;
+      if (isCurrentlyEmpty) setIsCartOpen(true);
+      return addItem(prev, id);
     });
   };
 
   const updateQty = (id: string, delta: number) => {
-    setCart((prev) => {
-      const currentQty = prev[id] || 0;
-      const newQty = Math.max(0, currentQty + delta);
-      return {
-        ...prev,
-        [id]: newQty,
-      };
-    });
+    setCart((prev) => updateItem(prev, id, delta));
   };
 
-
-
   const clearCart = () => {
-    setCart({});
+    setCart(clearItems());
   };
 
   const displayItem = hoveredItem || selectedItem;

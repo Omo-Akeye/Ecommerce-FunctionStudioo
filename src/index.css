@@ -6,6 +6,10 @@
 @theme {
   --font-sans: 'Inter';
   --font-serif: 'Instrument Serif', serif;
+  
+  --color-cart-border: #FFFFFF29;
+  --color-cart-text: #FFFFFF8F;
+  --color-cart-btn: #21241E;
 }
 
 @utility custom-scrollbar {
