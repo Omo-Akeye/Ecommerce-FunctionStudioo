@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion} from 'framer-motion';
 import { Link } from 'react-router';
 import { itemsInfo } from '../data';
@@ -6,6 +6,9 @@ import logo from '../assets/logo.png';
 import { getCartCount } from '../cartUtils';
 import featured from '../assets/featured.png';
 import { FaTiktok, FaInstagram, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
+import { Toast } from '../components/Toast';
+
+interface ToastItem { id: string; message: string; }
 
 interface CollectionsProps {
   cart: { [key: string]: number };
@@ -20,7 +23,21 @@ export const Collections = ({
   addToCart,
 }: CollectionsProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
   const cartCount = getCartCount(cart);
+
+  const addToast = useCallback((message: string) => {
+    const id = Math.random().toString(36).slice(2);
+    setToasts((prev) => [...prev, { id, message }]);
+  }, []);
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+
+
+
+
 
 
   const products = Object.values(itemsInfo);
@@ -30,11 +47,12 @@ export const Collections = ({
 
   return (
     <div className="min-h-screen bg-[#30332D] text-white font-sans pb-12 overflow-x-hidden">
+      <Toast toasts={toasts} onDismiss={dismissToast} />
       
 
 
- 
-      <header className="relative z-10 max-w-415.75 mx-auto px-8 pt-8 flex justify-between items-center">
+ {/* <header className="fixed top-0 left-0 right-0 z-50 w-full max-w-[1663px] mx-auto px-8 pt-8 pb-4 flex justify-between items-center bg-[#30332D]/90 backdrop-blur-md"> */}
+      <header className=" max-w-415.75 mx-auto px-8 pt-8 flex justify-between items-center fixed top-0 left-0 right-0 z-50 backdrop-blur-md">
       
         <Link to="/" className="transition-transform duration-300 hover:scale-105">
           <img src={logo} alt="Lavis" className="w-28 h-auto" />
@@ -73,11 +91,11 @@ export const Collections = ({
       </header>
 
      
-      <main className="max-w-7xl mx-auto  mt-29.5 relative z-10">
+      <main className="max-w-7xl mx-auto  mt-[14.1%] relative z-10">
         
    
         <section className="max-w-264.25 mb-18.5 flex flex-col items-center text-center mx-auto">
-          <h1 className="text-white text-[116px] max-md:text-[50px] font-sans font-semibold leading-[100%] tracking-[-0.06em] uppercase mb-8">
+          <h1 className="text-white text-[116px] max-md:text-[50px] font-sans font-semibold leading-[100%] tracking-[-0.06em] uppercase mb-8 shrink-0">
             COLLEZIONE AUREA
           </h1>
           <p className="text-white text-xl font-medium leading-[20.84px] mb-6">
@@ -125,21 +143,21 @@ export const Collections = ({
 
       </main>
      
-        <section className="mb-21.5 max-w-415.75 relative rounded-[20px] mx-8 min-[1700px]:mx-auto px-12.25 py-15.25 bg-cart-btn max-h-133 flex items-center justify-between">
+           <section className="mb-21.5 max-w-415.75 relative rounded-[20px] mx-8 min-[1700px]:mx-auto px-12.25 py-15.25 bg-cart-btn max-h-133 flex items-center justify-between">
  
 
-            <main className="flex flex-col md:flex-row items-center justify-between gap-10">
+            <main className="flex flex-col md:flex-row items-center justify-between xl:gap-10 gap-8">
 
           
           
-            <div className="max-w-89 h-auto flex flex-col items-center justify-center relative">
+            <div className="min-[1380px]:max-w-89 max-w-75 h-auto flex flex-col items-center justify-center relative">
               <motion.img
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
                 src={featuredProduct.mainImage}
                 alt={featuredProduct.title}
-                className="max-w-89 h-full object-contain hover:scale-105 transition-transform duration-500"
+                className="min-[1380px]:max-w-89 max-w-75 h-full object-contain hover:scale-105 transition-transform duration-500"
               />
                <p className="text-[#FFFFFFB8] text-xs mt-5 tracking-wider uppercase font-medium">
                   {featuredProduct.title}
@@ -147,7 +165,7 @@ export const Collections = ({
             </div>
 
             <div className=" pointer-events-none">
-              <h2 className="font-serif italic font-normal text-[173.38px] leading-[80%] tracking-[-0.04em] text-white select-none ">
+              <h2 className="font-serif italic font-normal min-[1380px]:text-[173.38px] text-[120px] leading-[80%] tracking-[-0.04em] text-white select-none ">
                 feel <br />timeless <br />comfort
               </h2>
             </div>
@@ -157,7 +175,7 @@ export const Collections = ({
             <div className="self-stretch flex flex-col items-end justify-between w-full py-2">
               
           
-              <div className="w-100.25  cursor-pointer group transition-all duration-300 relative overflow-hidden">
+              <div className="min-[1380px]:w-100.25 max-w-[80%]  cursor-pointer group transition-all duration-300 relative overflow-hidden">
              <img src={featured} alt="featured product" />
               </div>
 
@@ -180,18 +198,22 @@ export const Collections = ({
        
         </section>
 
+
   
-        <section className="mb-24 max-w-7xl mx-auto px-8">
+        <section className="mb-24 max-w-360 mx-auto px-8">
       
           
          
 
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-  {products.map((prod) => (
-    <div
+  {products.map((prod, index) => (
+    <motion.div
       key={prod.id}
-
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.55, delay: (index % 3) * 0.12, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex flex-col items-center p-8 h-full transition-all duration-300"
     >
      
@@ -215,13 +237,13 @@ export const Collections = ({
         </p>
 
         <button
-          onClick={() => addToCart(prod.id)}
+          onClick={() => { addToCart(prod.id); addToast(`${prod.title} added to cart`); }}
           className="bg-custom hover:bg-yellow-300 text-black  font-semibold underline  px-5 py-3 rounded-full transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 uppercase"
         >
           ADD TO CART
         </button>
       </div>
-    </div>
+    </motion.div>
   ))}
 </div>
 
@@ -233,7 +255,7 @@ export const Collections = ({
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
           
     
-          <div className="max-w-278.25">
+          <div className="xl:max-w-278.25 max-w-[70%]">
             <p className="text-[#FFFFFFA3] text-xs font-medium  text-left tracking-[-6%]">
               Since 1925, Venus believed that true luxury is never rushed—it is patiently shaped, refined, and perfected over generations. Every curve is intentional, every material carefully chosen, and every detail crafted to stand the test of time. Rooted in Italy's rich design heritage, our collections celebrate the harmony of timeless craftsmanship and contemporary living. More than furniture, each piece carries a legacy of history, elegance, and enduring character into the homes where life's most meaningful moments unfold.
             </p>
