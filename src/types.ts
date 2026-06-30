@@ -4,6 +4,7 @@ export interface CartItemData {
   description: string;
   price: number;
   image: string;
+  mainImage: string;
 }
 
 export interface CartItemProps {

@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router';
 import emptyCartImg from '../assets/emptycart.png';
 import { CartItem, formatPrice } from '../components/CartItem';
 import { itemsInfo } from '../data';
@@ -13,6 +14,7 @@ export interface SidebarCartProps {
 }
 
 export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: SidebarCartProps) => {
+  const navigate = useNavigate();
   const totalPrice = getTotalPrice(cart);
   const isCartEmpty = getIsCartEmpty(cart);
 
@@ -55,12 +57,12 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full sm:w-121 max-w-full z-50 border-l border-[#FFFFFF29] flex flex-col text-white pointer-events-auto"
+            className="fixed top-0 right-0 h-full w-full sm:w-121 max-w-full z-50 border-l border-cart-border flex flex-col text-white pointer-events-auto"
             style={{ backgroundColor: '#30332D' }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="pb-6.5 pt-10 px-7.25 flex justify-between items-center border-b border-[#FFFFFF29]">
+            <div className="pb-6.5 pt-10 px-7.25 flex justify-between items-center border-b border-cart-border">
               <h3 className="text-2xl font-semibold tracking-[-6%] font-sans text-white">
                 Proceed to checkout
               </h3>
@@ -70,7 +72,7 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                   <div className="relative flex flex-col items-center group">
                     <button
                       onClick={clearCart}
-                      className="text-white hover:text-[#FEEC04] transition-colors duration-200 cursor-pointer p-1"
+                      className="text-white hover:text-custom transition-colors duration-200 cursor-pointer p-1"
                       aria-label="Clear cart"
                     >
                       <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -78,9 +80,9 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                       </svg>
                     </button>
                     {/* Yellow pill tooltip */}
-                    <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-[#FEEC04] text-[#1C1A1B] text-[11px] font-sans font-bold py-1.5 px-4 rounded-full shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                    <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-custom text-[#1C1A1B] text-[11px] font-sans font-bold py-1.5 px-4 rounded-full shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
            
-                      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#FEEC04] rotate-45" />
+                      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-custom rotate-45" />
                       <span className="relative z-10">Clear cart</span>
                     </div>
                   </div>
@@ -112,8 +114,11 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                     Your cart is empty
                   </p>
                   <button
-                    onClick={onClose}
-                    className="text-[#FEEC04] text-[13px] underline underline-offset-4 cursor-pointer hover:text-yellow-300 transition-colors font-medium font-sans"
+                    onClick={() => {
+                      onClose();
+                      navigate('/collections');
+                    }}
+                    className="text-custom text-[13px] underline underline-offset-4 cursor-pointer hover:text-yellow-300 transition-colors font-medium font-sans"
                   >
                     View collections
                   </button>
@@ -143,11 +148,11 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
             <footer>
 
              {!isCartEmpty && (
-                <div className="p-4 font-sans text-center text-[#FFFFFF8F] text-xs tracking-[-4%]  font-medium">
+                <div className="p-4 font-sans text-center text-cart-text text-xs tracking-[-4%]  font-medium">
                   Free Shipping In Italy. Taxes Are Calculated At Next Step
                 </div>
               )}
-            <div className="px-7.25 py-8.5 bg-[#21241E] border-t border-[#FFFFFF29] flex items-center justify-between">
+            <div className="px-7.25 py-8.5 bg-cart-btn border-t border-cart-border flex items-center justify-between">
               <div className="font-serif italic text-[32px] leading-[100%] tracking-[-2%] text-white font-normal">
                 {formatPrice(totalPrice)}
               </div>
@@ -156,12 +161,12 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                 {isCartEmpty ? (
                   <button
                     disabled
-                    className="w-26.75 h-9.5 flex items-center justify-center bg-[#FEEC04] text-[#1C1A1B] underline font-sans font-medium text-xs tracking-wider rounded-[20px] cursor-not-allowed select-none opacity-[0.12] shadow-lg"
+                    className="w-26.75 h-9.5 flex items-center justify-center bg-custom text-[#1C1A1B] underline font-sans font-medium text-xs tracking-wider rounded-[20px] cursor-not-allowed select-none opacity-[0.12] shadow-lg"
                   >
                     CHECKOUT
                   </button>
                 ) : (
-                  <button className="w-26.75 h-9.5 flex items-center justify-center bg-[#FEEC04] text-[#1C1A1B] underline font-sans font-medium text-xs tracking-wider rounded-[20px] hover:bg-yellow-300 active:scale-95 transition-all duration-200 cursor-pointer shadow-lg">
+                  <button className="w-26.75 h-9.5 flex items-center justify-center bg-custom text-[#1C1A1B] underline font-sans font-medium text-xs tracking-wider rounded-[20px] hover:bg-yellow-300 active:scale-95 transition-all duration-200 cursor-pointer shadow-lg">
                     CHECKOUT
                   </button>
                 )}
