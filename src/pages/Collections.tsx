@@ -125,21 +125,21 @@ export const Collections = ({
 
       </main>
      
-        <section className="mb-21.5 max-w-[95%] rounded-[20px] mx-auto px-12.25 py-15.25 bg-cart-btn max-h-133 flex items-center justify-between">
+        <section className="mb-21.5 max-w-415.75 relative rounded-[20px] mx-8 min-[1700px]:mx-auto px-12.25 py-15.25 bg-cart-btn max-h-133 flex items-center justify-between">
  
 
             <main className="flex flex-col md:flex-row items-center justify-between gap-10">
 
           
           
-            <div className="w-89 h-auto flex flex-col items-center justify-center relative">
+            <div className="max-w-89 h-auto flex flex-col items-center justify-center relative">
               <motion.img
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
                 src={featuredProduct.mainImage}
                 alt={featuredProduct.title}
-                className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
+                className="max-w-89 h-full object-contain hover:scale-105 transition-transform duration-500"
               />
                <p className="text-[#FFFFFFB8] text-xs mt-5 tracking-wider uppercase font-medium">
                   {featuredProduct.title}
