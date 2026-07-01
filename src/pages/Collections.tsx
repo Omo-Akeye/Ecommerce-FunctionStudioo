@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
-import { motion} from 'framer-motion';
-import { Link } from 'react-router';
+import { useState, useCallback, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { itemsInfo } from '../data';
 import logo from '../assets/logo.png';
 import { getCartCount } from '../cartUtils';
@@ -25,6 +25,27 @@ export const Collections = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const cartCount = getCartCount(cart);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const state = location.state as Record<string, any> | null;
+    if (state?.scrollToProducts) {
+      const element = document.getElementById('products-list');
+      if (element) {
+        const timer = setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+
+        navigate(location.pathname, {
+          replace: true,
+          state: { ...state, scrollToProducts: undefined },
+        });
+
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [location, navigate]);
 
   const addToast = useCallback((message: string) => {
     const id = Math.random().toString(36).slice(2);
@@ -86,11 +107,11 @@ export const Collections = ({
       </header>
 
      
-      <main className="max-w-7xl mx-auto  mt-[14.1%] relative z-10">
+      <main className="max-w-7xl mx-auto  lg:mt-[14.1%] mt-[25%] relative z-10">
         
    
-        <section className="max-w-264.25 mb-18.5 flex flex-col items-center text-center mx-auto">
-          <h1 className="text-white text-[116px] max-md:text-[50px] font-sans font-semibold leading-[100%] tracking-[-0.06em] uppercase mb-8 shrink-0 whitespace-nowrap">
+        <section className="max-w-264.25 mb-18.5 flex flex-col items-center text-center mx-auto max-lg:px-8">
+          <h1 className="text-white lg:text-[116px] text-[100px] font-sans font-semibold leading-[100%] tracking-[-0.06em] uppercase mb-8 shrink-0 whitespace-nowrap">
             COLLEZIONE AUREA
           </h1>
           <p className="text-white text-xl font-medium leading-[20.84px] mb-6">
@@ -175,7 +196,7 @@ export const Collections = ({
               </div>
 
            
-              <div className="text-center md:text-right flex flex-col items-center md:items-end gap-2">
+              <div className="text-center  flex flex-col items-center  gap-2">
                
                 <p className="text-custom font-serif text-[40px] tracking-[-0.04em]">
                   ${featuredProduct.price.toFixed(2)}
@@ -195,13 +216,13 @@ export const Collections = ({
 
 
   
-        <section className="mb-24 max-w-360 mx-auto px-8">
+        <section id="products-list" className="mb-24 max-w-360 mx-auto px-8">
       
           
          
 
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:gap-8 gap-5">
   {products.map((prod, index) => (
     <motion.div
       key={prod.id}
@@ -212,7 +233,7 @@ export const Collections = ({
       className="group relative flex flex-col items-center p-8 h-full transition-all duration-300"
     >
      
-      <div className="h-92.5 flex items-center justify-center mb-14 relative w-full">
+      <div className="h-75 flex items-center justify-center mb-14 relative w-full">
         <img
           src={prod.mainImage}
           alt={prod.title}
@@ -221,7 +242,7 @@ export const Collections = ({
       </div>
 
 
-      <h3 className="text-white text-2xl font-medium text-center px-2 mb-4">
+      <h3 className="text-white lg:text-2xl text-xl font-medium text-center  mb-4 whitespace-nowrap">
         {prod.title}
       </h3>
 
@@ -232,7 +253,12 @@ export const Collections = ({
         </p>
 
         <button
-          onClick={() => { addToCart(prod.id); addToast(`${prod.title} added to cart`); }}
+          onClick={() => {
+            addToCart(prod.id);
+            if (cartCount > 0) {
+              addToast(`${prod.title} added to cart`);
+            }
+          }}
           className="bg-custom hover:bg-yellow-300 text-black  font-semibold underline  px-5 py-3 rounded-full transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 uppercase"
         >
           ADD TO CART

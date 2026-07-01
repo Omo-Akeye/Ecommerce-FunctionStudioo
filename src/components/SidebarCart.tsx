@@ -132,7 +132,13 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                   <button
                     onClick={() => {
                       onClose();
-                      navigate('/collections');
+                      navigate('/collections', { state: { scrollToProducts: true } });
+                      if (window.location.pathname === '/collections') {
+                        const element = document.getElementById('products-list');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }
                     }}
                     className="text-custom text-[13px] underline underline-offset-4 cursor-pointer hover:text-yellow-300 transition-colors font-medium font-sans"
                   >
