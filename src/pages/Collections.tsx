@@ -95,7 +95,7 @@ export const Collections = ({
         
    
         <section className="max-w-264.25 mb-18.5 flex flex-col items-center text-center mx-auto">
-          <h1 className="text-white text-[116px] max-md:text-[50px] font-sans font-semibold leading-[100%] tracking-[-0.06em] uppercase mb-8 shrink-0">
+          <h1 className="text-white text-[116px] max-md:text-[50px] font-sans font-semibold leading-[100%] tracking-[-0.06em] uppercase mb-8 shrink-0 whitespace-nowrap">
             COLLEZIONE AUREA
           </h1>
           <p className="text-white text-xl font-medium leading-[20.84px] mb-6">
