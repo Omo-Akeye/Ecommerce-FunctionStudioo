@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router';
 import emptyCartImg from '../assets/emptycart.png';
@@ -17,6 +18,21 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
   const navigate = useNavigate();
   const totalPrice = getTotalPrice(cart);
   const isCartEmpty = getIsCartEmpty(cart);
+
+  useEffect(() => {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    };
+  }, [isOpen]);
 
   return (
     <AnimatePresence>

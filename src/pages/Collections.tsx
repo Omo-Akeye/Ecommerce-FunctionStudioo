@@ -35,11 +35,6 @@ export const Collections = ({
   }, []);
 
 
-
-
-
-
-
   const products = Object.values(itemsInfo);
 
 
@@ -52,7 +47,7 @@ export const Collections = ({
 
 
  {/* <header className="fixed top-0 left-0 right-0 z-50 w-full max-w-[1663px] mx-auto px-8 pt-8 pb-4 flex justify-between items-center bg-[#30332D]/90 backdrop-blur-md"> */}
-      <header className=" max-w-415.75 mx-auto px-8 pt-8 flex justify-between items-center fixed top-0 left-0 right-0 z-50 backdrop-blur-md">
+      <header className=" max-w-415.75 mx-auto px-8 pt-8 flex justify-between items-center fixed top-0 left-0 right-0 z-20 backdrop-blur-md">
       
         <Link to="/" className="transition-transform duration-300 hover:scale-105">
           <img src={logo} alt="Lavis" className="w-28 h-auto" />
