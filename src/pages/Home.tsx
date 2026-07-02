@@ -496,7 +496,7 @@ export const Home = ({
                       { id: '02', name: 'SHOWROOM', active: false, to: '#' },
                       { id: '03', name: 'COLLECTIONS', active: false, to: '/collections' },
                       { id: '04', name: 'PROMO', active: false, to: '#' },
-                      { id: '05', name: 'PROJECTS', active: false, to: '#' },
+                      { id: '05', name: 'ABOUT US', active: false, to: '#' },
                       { id: '06', name: 'CONTACT', active: false, to: '#' },
                     ].map((item) => (
                       <li key={item.id} className="flex items-center text-xs font-semibold tracking-widest cursor-pointer group gap-2">
@@ -522,12 +522,16 @@ export const Home = ({
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-3 bg-custom text-black text-xs font-semibold py-4 px-6 cursor-pointer flex justify-between items-center hover:bg-yellow-300 transition-colors duration-250">
+                  <Link
+                    to="/signin"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="mt-3 bg-custom text-black text-xs font-semibold py-4 px-6 cursor-pointer flex justify-between items-center hover:bg-yellow-300 transition-colors duration-250 text-center"
+                  >
                     SIGN IN <span><svg width="11" height="9" viewBox="0 0 11 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M10.372 4.68477L6.43453 8.62228C6.35244 8.70437 6.2411 8.75049 6.125 8.75049C6.0089 8.75049 5.89756 8.70437 5.81547 8.62228C5.73338 8.54018 5.68726 8.42884 5.68726 8.31274C5.68726 8.19665 5.73338 8.08531 5.81547 8.00321L9.00648 4.81274H0.4375C0.321468 4.81274 0.210188 4.76665 0.128141 4.6846C0.0460937 4.60256 0 4.49128 0 4.37524C0 4.25921 0.0460937 4.14793 0.128141 4.06588C0.210188 3.98384 0.321468 3.93774 0.4375 3.93774H9.00648L5.81547 0.747275C5.73338 0.665182 5.68726 0.55384 5.68726 0.437743C5.68726 0.321647 5.73338 0.210305 5.81547 0.128212C5.89756 0.0461192 6.0089 0 6.125 0C6.2411 0 6.35244 0.0461192 6.43453 0.128212L10.372 4.06571C10.4127 4.10634 10.445 4.1546 10.467 4.20771C10.489 4.26082 10.5003 4.31775 10.5003 4.37524C10.5003 4.43274 10.489 4.48967 10.467 4.54278C10.445 4.59589 10.4127 4.64414 10.372 4.68477Z" fill="#1C1A1B" />
                     </svg>
                     </span>
-                  </div>
+                  </Link>
                 </motion.div>
               )}
             </AnimatePresence>

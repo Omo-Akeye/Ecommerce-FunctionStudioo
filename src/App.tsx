@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { Home } from './pages/Home';
 import { Collections } from './pages/Collections';
+import { Signin } from './pages/Signin';
 import { SidebarCart } from './components/SidebarCart';
 import { MobileGate } from './components/MobileGate';
 import { addItem, updateItem, clearItems } from './cartUtils';
@@ -56,6 +57,12 @@ const App = () => {
               setIsCartOpen={setIsCartOpen}
               addToCart={addToCart}
             />
+          }
+        />
+        <Route
+          path="/signin"
+          element={
+            <Signin />
           }
         />
       </Routes>
