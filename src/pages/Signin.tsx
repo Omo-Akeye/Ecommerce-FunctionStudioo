@@ -88,14 +88,15 @@ export const Signin = () => {
         </svg>
       </button>
 <main className="grow flex items-center justify-center px-8 mb-40.75">
-  <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-12 lg:gap-16 xl:gap-20.75 w-full max-w-7xl">
+  {/* <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-12 lg:gap-16 xl:gap-20.75 w-full max-w-7xl"> */}
+  <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-12 lg:gap-12 w-full max-w-7xl">
 
 
     <div className="flex flex-col lg:items-start items-center lg:justify-self-end">
-      <h1 className="text-white text-5xl md:text-[56px] font-semibold tracking-[-0.06em] uppercase mb-6 nowhitespace">
+      <h1 className="text-white text-5xl md:text-[56px] font-semibold tracking-[-0.06em] uppercase mb-6 whitespace-nowrap">
         SIGN IN
       </h1>
-      <p className="text-xl text-white font-medium nowhitespace">
+      <p className="text-xl text-white font-medium whitespace-nowrap">
         Sign in or create an account
       </p>
     </div>
@@ -148,13 +149,13 @@ export const Signin = () => {
     <div className="w-full max-w-36 inline-block">
       <button
         type="submit"
-        className="w-full bg-custom hover:bg-yellow-300 text-black underline font-semibold py-4 rounded-full transition-all duration-300 cursor-pointer text-xl uppercase tracking-wider hover:scale-[1.02] active:scale-[0.98]"
+        className="w-full bg-custom hover:bg-yellow-300 text-black underline font-semibold py-3 rounded-full transition-all duration-300 cursor-pointer  uppercase tracking-wider hover:scale-[1.02] active:scale-[0.98]"
       >
         CONTINUE
       </button>
     </div>
 
-    <p className="text-sm text-white tracking-wide text-center leading-[20.84px]">
+    <p className="text-sm text-white tracking-wide text-center whitespace-nowrap ">
       By continuing, you agree to our{' '}
       <a href="#" className="underline hover:text-white/40 transition-colors duration-200">
         TERMS AND CONDITIONS
