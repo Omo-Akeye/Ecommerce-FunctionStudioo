@@ -87,82 +87,80 @@ export const Signin = () => {
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-<main className="grow flex items-center justify-center px-8 mb-40.75">
-  {/* <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-12 lg:gap-16 xl:gap-20.75 w-full max-w-7xl"> */}
-  <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-12 lg:gap-12 w-full max-w-7xl">
+<main className="grow flex items-center justify-center px-6 md:px-8 w-full mb-20 md:mb-40.75">
+  <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-10 md:gap-16 w-full max-w-225">
 
+    {/* Left Side: Slider */}
+    <div className="flex flex-col items-center gap-6 w-full">
+      <div className="w-full h-auto aspect-380/476 max-w-95 overflow-hidden rounded-[30px] relative flex items-center justify-center">
+        <AnimatePresence mode="popLayout">
+          <motion.img
+            key={currentSlide}
+            src={sliderImages[currentSlide]}
+            alt={`Slide ${currentSlide + 1}`}
+            initial={{ opacity: 0, x: '-100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </AnimatePresence>
+      </div>
 
-    <div className="flex flex-col lg:items-start items-center lg:justify-self-end">
-      <h1 className="text-white text-5xl md:text-[56px] font-semibold tracking-[-0.06em] uppercase mb-6 whitespace-nowrap">
-        SIGN IN
-      </h1>
-      <p className="text-xl text-white font-medium whitespace-nowrap">
-        Sign in or create an account
-      </p>
+      <div className="flex gap-2">
+        {sliderImages.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentSlide(idx)}
+            className={`h-0.75 rounded-full transition-all duration-300 cursor-pointer ${
+              currentSlide === idx ? 'w-8 bg-white' : 'w-4 bg-white/20 hover:bg-white/40'
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
+      </div>
     </div>
 
-<div className="flex flex-col items-center gap-6 justify-self-center w-full">
-  <div className="w-full h-auto max-w-95 max-h-119 aspect-380/476 overflow-hidden rounded-[30px] border border-white/5 relative flex items-center justify-center">
-    <AnimatePresence mode="popLayout">
-      <motion.img
-        key={currentSlide}
-        src={sliderImages[currentSlide]}
-        alt={`Slide ${currentSlide + 1}`}
-        initial={{ opacity: 0, x: '-100%' }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: '100%' }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-    </AnimatePresence>
-  </div>
+    {/* Right Side: Sign In Form */}
+    <div className="flex flex-col justify-center w-full">
+      <div className="flex flex-col items-start mb-13">
+        <h1 className="text-white text-4xl md:text-[56px] font-semibold tracking-[-0.06em] uppercase mb-5.5 leading-none">
+          SIGN IN
+        </h1>
+        <p className="text-base text-white font-medium">
+          Sign in or create an account
+        </p>
+      </div>
 
-  <div className="flex gap-2">
-    {sliderImages.map((_, idx) => (
-      <button
-        key={idx}
-        onClick={() => setCurrentSlide(idx)}
-        className={`h-0.75 rounded-full transition-all duration-300 cursor-pointer ${
-          currentSlide === idx ? 'w-8 bg-white' : 'w-4 bg-white/20 hover:bg-white/40'
-        }`}
-        aria-label={`Go to slide ${idx + 1}`}
-      />
-    ))}
-  </div>
-</div>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
+        <div className="relative w-full">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full font-semibold px-6 py-4 rounded-full bg-[#515251] h-14 text-white placeholder-white focus:outline-none focus:border-custom/50 focus:ring-1 focus:ring-custom/50 transition-all duration-300 text-base"
+            required
+          />
+        </div>
+        
+        <div>
+          <button
+            type="submit"
+            className="inline-block px-8 bg-custom hover:bg-yellow-400 text-black font-semibold py-3 rounded-full transition-all duration-300 cursor-pointer uppercase tracking-wider hover:scale-[1.02] active:scale-[0.98]"
+          >
+            CONTINUE
+          </button>
+        </div>
 
-
-
-
-<div className="flex flex-col lg:items-start items-center justify-center lg:justify-self-start w-full max-w-85">
-  <form onSubmit={handleSubmit} className="flex flex-col gap-7 w-full">
-    <div className="relative w-full">
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full max-w-full font-semibold px-5 py-4 rounded-full bg-[#515251] h-14 text-white tracking-[-6%] leading-5.75 placeholder-white focus:outline-none focus:border-custom/50 focus:ring-1 focus:ring-custom/50 transition-all duration-300 text-lg"
-        required
-      />
+        <p className="text-sm text-white mt-2">
+          By continuing, you agree to our{' '}
+          <a href="#" className="underline hover:text-white/80 transition-colors duration-200">
+            TERMS AND CONDITIONS
+          </a>
+        </p>
+      </form>
     </div>
-    <div className="w-full max-w-36 inline-block">
-      <button
-        type="submit"
-        className="w-full bg-custom hover:bg-yellow-300 text-black underline font-semibold py-3 rounded-full transition-all duration-300 cursor-pointer  uppercase tracking-wider hover:scale-[1.02] active:scale-[0.98]"
-      >
-        CONTINUE
-      </button>
-    </div>
-
-    <p className="text-sm text-white tracking-wide text-center whitespace-nowrap ">
-      By continuing, you agree to our{' '}
-      <a href="#" className="underline hover:text-white/40 transition-colors duration-200">
-        TERMS AND CONDITIONS
-      </a>
-    </p>
-  </form>
-</div>
 
   </div>
 </main>
