@@ -18,8 +18,8 @@ export const CheckoutSummary = ({ cart }: CheckoutSummaryProps) => {
 
   return (
     <div className="w-full mt-10 lg:mt-0 relative">
-      <div className="bg-cart-btn rounded-4xl p-8 sticky top-8">
-        <div className="flex flex-col gap-6 mb-8">
+      <div className="bg-cart-btn rounded-[22px] py-8 px-9 sticky top-8">
+        <div className="flex flex-col gap-6 mb-6">
           {displayItems.map((item, index) => (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center gap-6">
@@ -35,38 +35,38 @@ export const CheckoutSummary = ({ cart }: CheckoutSummaryProps) => {
                     {item.qty}
                   </div>
                 </div>
-                <span className="text-base text-gray-200 max-w-37.5">{item.title}</span>
+                <span className="text-sm text-white max-w-[200px] font-medium">{item.title}</span>
               </div>
-              <span className="text-base">${(item.price * item.qty).toFixed(2)}</span>
+              <span className="text-sm font-medium">${(item.price * item.qty).toFixed(2)}</span>
             </div>
           ))}
         </div>
 
-        <div className="flex gap-3 mb-10">
+        <div className="flex gap-3 mb-6">
           <input
             type="text"
             placeholder="Discount code"
-            className="flex-1 bg-ash text-white px-6 py-4 rounded-full focus:outline-none focus:ring-1 focus:ring-custom/50 placeholder-gray-400"
+            className="flex-1 bg-ash text-white p-3.5 rounded-full focus:outline-none focus:ring-1 focus:ring-custom/50 placeholder-gray-400"
           />
-          <button className="bg-ash hover:bg-stone text-gray-300 hover:text-white px-8 py-4 rounded-full transition-colors cursor-pointer font-medium">
+          <button className="bg-[#FEEC04] underline hover:bg-stone text-black hover:text-white py-3.5 px-[30px] rounded-full transition-colors cursor-pointer font-medium">
             APPLY
           </button>
         </div>
 
-        <div className="flex flex-col gap-4 text-sm mb-6 pb-6 border-b border-gray-600/50">
+        <div className="flex flex-col gap-3 text-sm mb-6 pb-6 border-b border-gray-600/50">
           <div className="flex justify-between items-center">
-            <span className="text-gray-400">Subtotal</span>
-            <span className="font-medium">${subtotal.toFixed(2)}</span>
+            <span className="text-white text-sm font-medium">Subtotal</span>
+            <span className="font-medium text-sm">${subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-gray-400">Shipping</span>
-            <span className="font-medium">${shipping.toFixed(2)}</span>
+            <span className="text-white text-sm font-medium">Shipping</span>
+            <span className="font-medium text-sm">${shipping.toFixed(2)}</span>
           </div>
         </div>
 
         <div className="flex justify-between items-center">
           <span className="text-lg font-medium">Total</span>
-          <span className="text-xl font-semibold">${total.toFixed(2)}</span>
+          <span className="text-lg font-medium">${total.toFixed(2)}</span>
         </div>
       </div>
     </div>
