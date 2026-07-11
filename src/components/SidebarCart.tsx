@@ -44,10 +44,7 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 pointer-events-auto"
-            style={{
-              background: 'linear-gradient(271.54deg, rgba(33, 36, 30, 0.85) 0%, #151713 100%)',
-            }}
+            className="fixed inset-0 z-40 pointer-events-auto theme-sidebar-overlay"
             onClick={(e) => {
               e.stopPropagation();
               onClose();
@@ -62,7 +59,7 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
             transition={{ duration: 0.3 }}
             className="fixed left-8 bottom-8 max-xl:bottom-6 right-129 max-w-7xl z-45 pointer-events-none hidden md:block"
           >
-            <p className="text-[#FFFFFFA3] text-xs font-sans font-light leading-relaxed text-left tracking-[-6%]">
+            <p className="text-mist text-xs font-sans font-light leading-relaxed text-left tracking-[-6%]">
               Since 1925, we've believed that true luxury is never rushed—it is patiently shaped, refined, and perfected over generations. Every curve is intentional, every material carefully chosen, and every detail crafted to stand the test of time. Rooted in Italy's rich design heritage, our collections celebrate the harmony of timeless craftsmanship and contemporary living. More than furniture, each piece carries a legacy of artistry, bringing warmth, elegance, and enduring character into the homes where life's most meaningful moments unfold.
             </p>
           </motion.div>
@@ -73,8 +70,7 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full sm:w-121 max-w-full z-50 border-l border-cart-border flex flex-col text-white pointer-events-auto"
-            style={{ backgroundColor: '#30332D' }}
+            className="fixed top-0 right-0 h-full w-full sm:w-121 max-w-full z-50 border-l border-cart-border flex flex-col text-white pointer-events-auto bg-charcoal"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -96,7 +92,7 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                       </svg>
                     </button>
                     {/* Yellow pill tooltip */}
-                    <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-custom text-[#1C1A1B] text-[11px] font-sans font-bold py-1.5 px-4 rounded-full shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+                    <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-custom text-ink text-[11px] font-sans font-bold py-1.5 px-4 rounded-full shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
            
                       <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-custom rotate-45" />
                       <span className="relative z-10">Clear cart</span>
@@ -183,12 +179,18 @@ export const SidebarCart = ({ isOpen, onClose, cart, updateQty, clearCart }: Sid
                 {isCartEmpty ? (
                   <button
                     disabled
-                    className="w-26.75 h-9.5 flex items-center justify-center bg-custom text-[#1C1A1B] underline font-sans font-medium text-xs tracking-wider rounded-[20px] cursor-not-allowed select-none opacity-[0.12] shadow-lg"
+                    className="w-26.75 h-9.5 flex items-center justify-center bg-custom text-ink underline font-sans font-medium text-xs tracking-wider rounded-[20px] cursor-not-allowed select-none opacity-[0.12] shadow-lg"
                   >
                     CHECKOUT
                   </button>
                 ) : (
-                  <button className="w-26.75 h-9.5 flex items-center justify-center bg-custom text-[#1C1A1B] underline font-sans font-medium text-xs tracking-wider rounded-[20px] hover:bg-yellow-300 active:scale-95 transition-all duration-200 cursor-pointer shadow-lg">
+                  <button 
+                    onClick={() => {
+                      onClose();
+                      navigate('/checkout');
+                    }}
+                    className="w-26.75 h-9.5 flex items-center justify-center bg-custom text-ink underline font-sans font-medium text-xs tracking-wider rounded-[20px] hover:bg-yellow-300 active:scale-95 transition-all duration-200 cursor-pointer shadow-lg"
+                  >
                     CHECKOUT
                   </button>
                 )}

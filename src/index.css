@@ -9,10 +9,48 @@
   --font-serif: 'Instrument Serif', serif;
 
   --color-custom: #FEEC04;
+  --color-charcoal: #30332D;
+  --color-obsidian: #060606;
+  --color-raven: #0D0F0B;
+  --color-shadow: #0000008F;
+  --color-cinder: #4A4B48;
+  --color-gunmetal: #3A3D38;
+  --color-graphite: #2E312B;
+  --color-ash: #464843;
+  --color-slate-olive: #383A35;
+  --color-smoke: #515251;
+  --color-coal: #1e2019;
+  --color-ochre: #C9A84C;
+  --color-pitch: #151713;
+  --color-ink: #1C1A1B;
+  --color-cobalt: #003087;
+  --color-azure: #007bc1;
+  --color-stone: #5A5D57;
+  --color-mist: #FFFFFFA3;
+  --color-fog: #FFFFFF8F;
+  --color-pearl: #FFFFFFB8;
   
   --color-cart-border: #FFFFFF29;
   --color-cart-text: #FFFFFF8F;
   --color-cart-btn: #21241E;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    background-color: var(--color-charcoal);
+    color: white;
+  }
+
+  select option {
+    background-color: var(--color-gunmetal);
+    color: white;
+  }
 }
 
 @utility custom-scrollbar {
@@ -29,4 +67,25 @@
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
   }
+}
+
+/* Custom dark dropdown animation */
+.animate-dropdown {
+  animation: dropdownSlide 0.2s ease-out;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Semantic gradient helpers for components that use inline backgrounds */
+.theme-sidebar-overlay {
+  background: linear-gradient(271.54deg, rgba(33, 36, 30, 0.85) 0%, var(--color-pitch) 100%);
 }

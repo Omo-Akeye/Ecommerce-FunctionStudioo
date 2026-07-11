@@ -3,12 +3,13 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import { Home } from './pages/Home';
 import { Collections } from './pages/Collections';
 import { Signin } from './pages/Signin';
+import { Checkout } from './pages/Checkout';
 import { SidebarCart } from './components/SidebarCart';
 import { MobileGate } from './components/MobileGate';
 import { addItem, updateItem, clearItems } from './cartUtils';
 
 const App = () => {
-  // Shared Cart States
+ 
   const [cart, setCart] = useState<{ [key: string]: number }>({});
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -30,10 +31,10 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {/* Mobile blocker - hidden on screen >= md/lg */}
+     
       <MobileGate />
 
-      {/* Page Routing */}
+    
       <Routes>
         <Route
           path="/"
@@ -65,9 +66,15 @@ const App = () => {
             <Signin />
           }
         />
+        <Route
+          path="/checkout"
+          element={
+            <Checkout cart={cart} />
+          }
+        />
       </Routes>
 
-      {/* Global Checkout/Cart drawer overlay */}
+      
       <SidebarCart
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
