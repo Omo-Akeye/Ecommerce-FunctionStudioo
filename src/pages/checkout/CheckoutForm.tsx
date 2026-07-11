@@ -6,6 +6,7 @@ import 'react-phone-number-input/style.css';
 import en from 'react-phone-number-input/locale/en.json';
 import * as Flags from 'country-flag-icons/react/3x2';
 
+import { AnimatePresence, motion } from 'framer-motion';
 import type { CountryCode } from 'libphonenumber-js';
 
 interface CheckoutFormData {
@@ -16,6 +17,7 @@ interface CheckoutFormData {
   postcode: string;
   city: string;
   mobile: string;
+  additionalNote?: string;
 }
 
 interface CountryOption {
@@ -253,6 +255,8 @@ const PhoneCountrySelector = ({ country, callingCode, onChange }: PhoneCountrySe
 export const CheckoutForm = () => {
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>('IT');
   const [mobile, setMobile] = useState('');
+  const [showAdditionalFields, setShowAdditionalFields] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
 
   const { register, handleSubmit, setValue } = useForm<CheckoutFormData>({
     defaultValues: {
@@ -263,6 +267,7 @@ export const CheckoutForm = () => {
       postcode: '',
       city: '',
       mobile: '',
+      additionalNote: '',
     },
   });
 
@@ -274,6 +279,10 @@ export const CheckoutForm = () => {
   const callingCode = getSafeCountryCallingCode(selectedCountry);
 
   const onSubmit = (data: CheckoutFormData) => {
+    if (!mobile.trim()) {
+      setPhoneError(true);
+      return;
+    }
     console.log('Form data:', { ...data, mobile: `${callingCode}${mobile}`, country: selectedCountry });
   };
 
@@ -336,13 +345,36 @@ export const CheckoutForm = () => {
             />
           </div>
 
-          <div className="flex justify-end py-2">
-            <button
-              type="button"
-              className="text-sm text-white hover:text-gray-300 transition-colors cursor-pointer underline underline-offset-4"
-            >
-              + Additional fields (optional)
-            </button>
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-end py-2">
+              <button
+                type="button"
+                onClick={() => setShowAdditionalFields(!showAdditionalFields)}
+                className="text-sm text-white hover:text-gray-300 transition-colors cursor-pointer underline underline-offset-4"
+              >
+                {showAdditionalFields ? '- Hide additional fields' : '+ Additional fields (optional)'}
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {showAdditionalFields && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="bg-cinder rounded-2xl p-4">
+                    <textarea
+                      {...register('additionalNote')}
+                      placeholder="Add an additional note (delivery instructions, etc.)"
+                      className="w-full bg-transparent text-white focus:outline-none text-sm placeholder-pearl font-medium min-h-24 resize-none"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <div className="grid grid-cols-[1fr_0.8fr] gap-5">
@@ -364,18 +396,29 @@ export const CheckoutForm = () => {
             </div>
           </div>
 
-          <div className="flex bg-cinder rounded-[29.53px] h-14 relative">
-            <PhoneCountrySelector country={selectedCountry} callingCode={callingCode} onChange={handleCountryChange} />
+          <div className="flex flex-col gap-2">
+            <div className="flex bg-cinder rounded-[29.53px] h-14 relative">
+              <PhoneCountrySelector country={selectedCountry} callingCode={callingCode} onChange={handleCountryChange} />
 
-            <div className="flex-1 px-4 flex flex-col justify-center">
-              <input
-                value={mobile}
-                onChange={(event) => setMobile(event.target.value)}
-                type="tel"
-                placeholder="Enter number"
-                className="w-full bg-transparent text-white focus:outline-none text-sm placeholder-gray-400 font-medium -mt-0.5"
-              />
+              <div className="flex-1 px-4 flex flex-col justify-center">
+                <input
+                  value={mobile}
+                  onChange={(event) => {
+                    const val = event.target.value.replace(/[^0-9]/g, '');
+                    setMobile(val);
+                    if (val) setPhoneError(false);
+                  }}
+                  type="tel"
+                  placeholder="Enter number"
+                  className="w-full bg-transparent text-white focus:outline-none text-sm placeholder-gray-400 font-medium -mt-0.5"
+                />
+              </div>
             </div>
+            {phoneError && (
+              <span className="text-red-400 text-xs pl-4">
+                Please enter a valid phone number.
+              </span>
+            )}
           </div>
         </form>
       </div>
