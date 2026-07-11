@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { Home } from './pages/Home';
 import { Collections } from './pages/Collections';
@@ -6,12 +6,18 @@ import { Signin } from './pages/Signin';
 import { Checkout } from './pages/Checkout';
 import { SidebarCart } from './components/SidebarCart';
 import { MobileGate } from './components/MobileGate';
-import { addItem, updateItem, clearItems } from './cartUtils';
+import { addItem, updateItem, clearItems, loadCart, saveCart } from './cartUtils';
 
 const App = () => {
  
-  const [cart, setCart] = useState<{ [key: string]: number }>({});
+  const [cart, setCart] = useState<{ [key: string]: number }>(loadCart);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Persist cart to localStorage whenever it changes
+  useEffect(() => {
+    saveCart(cart);
+  }, [cart]);
+
 
   const addToCart = (id: string) => {
     setCart((prev) => {

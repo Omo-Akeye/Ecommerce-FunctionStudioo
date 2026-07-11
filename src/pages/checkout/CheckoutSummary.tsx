@@ -6,11 +6,8 @@ interface CheckoutSummaryProps {
 
 export const CheckoutSummary = ({ cart }: CheckoutSummaryProps) => {
   const cartItemKeys = Object.keys(cart);
-  const hasItems = cartItemKeys.length > 0;
 
-  const displayItems = hasItems
-    ? cartItemKeys.map((key) => ({ ...itemsInfo[key], qty: cart[key] }))
-    : [{ ...itemsInfo.chair, qty: 2 }];
+  const displayItems = cartItemKeys.map((key) => ({ ...itemsInfo[key], qty: cart[key] }));
 
   const subtotal = displayItems.reduce((accumulator, item) => accumulator + item.price * item.qty, 0);
   const shipping = 60.0;
@@ -26,9 +23,13 @@ export const CheckoutSummary = ({ cart }: CheckoutSummaryProps) => {
                 <div className="relative">
 
                     <img
-                      src={item.image || item.mainImage}
+                      src={item.mainImage}
                       alt={item.title}
-                      className="max-w-20 w-full max-h-full object-contain "
+                      className={
+                        item.id === 'table'
+                          ? "w-28 h-11 object-contain"
+                          : "max-w-24 w-full min-h-16 max-h-20 object-contain"
+                      }
                     />
            
                   <div className="absolute -top-2 -right-2 bg-custom text-black text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
