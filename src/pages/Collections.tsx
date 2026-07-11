@@ -62,7 +62,7 @@ export const Collections = ({
   const featuredProduct = itemsInfo.chair;
 
   return (
-    <div className="min-h-screen bg-[#30332D] text-white font-sans pb-12 overflow-x-hidden">
+    <div className="min-h-screen bg-charcoal text-white font-sans pb-12 overflow-x-hidden">
       <Toast toasts={toasts} onDismiss={dismissToast} />
       
 
@@ -117,7 +117,7 @@ export const Collections = ({
           <p className="text-white text-xl font-medium leading-[20.84px] mb-6">
             Inspired by the <span className="text-custom">"Golden Ratio"</span> symbolizing perfect proportions and timeless design.
           </p>
-          <div className="text-[#FFFFFFA3] text-sm leading-5.5 text-left flex flex-col w-full">
+          <div className="text-mist text-sm leading-5.5 text-left flex flex-col w-full">
   <p>
     Some collections are designed for a season. Others are designed for a lifetime. Collezione Aurea was born from an enduring Italian belief: that beauty lies in perfect proportion. Inspired by the Golden Ratio—known in Italy as la proporzione aurea, the collection celebrates harmony between form, function, and emotion. Its story begins in the workshops of Northern Italy, where master craftsmen have spent generations refining the art of furniture making. Here, every curve is drawn with intention, every material selected for its character, and every finish applied by hand with patience that cannot be rushed. The result is not simply furniture, but objects that feel as though they have always belonged.
   </p>
@@ -175,7 +175,7 @@ export const Collections = ({
                 alt={featuredProduct.title}
                 className="min-[1380px]:max-w-89 max-w-75 h-full object-contain hover:scale-105 transition-transform duration-500"
               />
-               <p className="text-[#FFFFFFB8] text-xs mt-5 tracking-wider uppercase font-medium">
+               <p className="text-pearl text-xs mt-5 tracking-wider uppercase font-medium">
                   {featuredProduct.title}
                 </p>
             </div>

@@ -61,10 +61,7 @@ const GrainEffect = () => {
 
 export const MobileGate = () => {
   return (
-    <div
-      className="fixed inset-0 z-9999 flex flex-col items-center justify-center overflow-hidden md:hidden"
-      style={{ backgroundColor: '#0D0F0B' }}
-    >
+    <div className="fixed inset-0 z-9999 flex flex-col items-center justify-center overflow-hidden md:hidden bg-raven">
      
       <GrainEffect />
 

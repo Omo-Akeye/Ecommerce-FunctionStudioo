@@ -43,7 +43,7 @@ const ItemTooltip = ({
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.15 }}
-          className="fixed z-100 pointer-events-auto w-38.75 bg-[#0000008F] backdrop-blur-[7.61px] text-black p-4 rounded-[57px]"
+          className="fixed z-100 pointer-events-auto w-38.75 bg-shadow backdrop-blur-[7.61px] text-black p-4 rounded-[57px]"
           style={{
             left: clampedX,
             top: clampedY,
@@ -235,7 +235,7 @@ export const Home = ({
   };
 
   return (
-    <div className="relative w-screen h-screen bg-[#060606] font-sans overflow-hidden select-none" onClick={handleBackgroundClick}>
+    <div className="relative w-screen h-screen bg-obsidian font-sans overflow-hidden select-none" onClick={handleBackgroundClick}>
       {/* Background Panels */}
       <div className="absolute inset-0 z-0">
         {/* Left Panel Container (0% to splitPercent%) */}

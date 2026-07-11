@@ -64,7 +64,7 @@ export const Signin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#30332D] text-white font-sans flex flex-col justify-between overflow-x-hidden relative pt-[10%] pb-12">
+    <div className="min-h-screen bg-charcoal text-white font-sans flex flex-col justify-between overflow-x-hidden relative pt-[10%] pb-12">
       <Toast toasts={toasts} onDismiss={dismissToast} />
 
       {/* Close Button top-right */}
@@ -139,7 +139,7 @@ export const Signin = () => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full font-semibold px-6 py-4 rounded-full bg-[#515251] h-14 text-white placeholder-white focus:outline-none focus:border-custom/50 focus:ring-1 focus:ring-custom/50 transition-all duration-300 text-base"
+            className="w-full font-semibold px-6 py-4 rounded-full bg-smoke h-14 text-white placeholder-white focus:outline-none focus:border-custom/50 focus:ring-1 focus:ring-custom/50 transition-all duration-300 text-base"
             required
           />
         </div>

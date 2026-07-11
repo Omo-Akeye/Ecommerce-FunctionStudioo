@@ -6,7 +6,7 @@ export const Footer = () => {
     <footer className="border-t border-white/5 pt-16 max-w-415.75 mx-auto px-8">
       <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
         <div className="xl:max-w-278.25 max-w-[70%]">
-          <p className="text-[#FFFFFFA3] text-xs font-medium text-left tracking-[-6%]">
+          <p className="text-mist text-xs font-medium text-left tracking-[-6%]">
             Since 1925, Venus believed that true luxury is never rushed—it is patiently shaped, refined, and perfected over generations. Every curve is intentional, every material carefully chosen, and every detail crafted to stand the test of time. Rooted in Italy's rich design heritage, our collections celebrate the harmony of timeless craftsmanship and contemporary living. More than furniture, each piece carries a legacy of history, elegance, and enduring character into the homes where life's most meaningful moments unfold.
           </p>
         </div>

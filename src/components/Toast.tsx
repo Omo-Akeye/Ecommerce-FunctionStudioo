@@ -41,10 +41,10 @@ const ToastCard = ({
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: 60, scale: 0.88 }}
       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-      className="pointer-events-auto relative flex items-center gap-3 bg-[#1e2019] border border-white/10 text-white text-sm font-medium px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md min-w-55 overflow-hidden"
+      className="pointer-events-auto relative flex items-center gap-3 bg-coal border border-white/10 text-white text-sm font-medium px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md min-w-55 overflow-hidden"
     >
       {/* Golden check circle */}
-      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#C9A84C] text-black shrink-0">
+      <span className="flex items-center justify-center w-6 h-6 rounded-full bg-ochre text-black shrink-0">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
           <path
             d="M2 6l3 3 5-5"
@@ -59,7 +59,7 @@ const ToastCard = ({
 
       {/* Progress bar */}
       <motion.div
-        className="absolute bottom-0 left-0 h-0.5 bg-[#C9A84C] rounded-full"
+        className="absolute bottom-0 left-0 h-0.5 bg-ochre rounded-full"
         initial={{ width: '100%' }}
         animate={{ width: '0%' }}
         transition={{ duration: 3.2, ease: 'linear' }}
