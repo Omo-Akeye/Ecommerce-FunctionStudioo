@@ -33,7 +33,7 @@ export const Checkout = ({ cart }: CheckoutProps) => {
         </div>
       </header>
 
-      <div className="max-w-342 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 relative">
+      <div className="max-w-342 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 relative">
         <CheckoutForm />
         <CheckoutSummary cart={cart} />
       </div>

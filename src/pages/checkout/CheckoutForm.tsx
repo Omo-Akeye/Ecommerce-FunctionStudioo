@@ -426,10 +426,12 @@ export const CheckoutForm = () => {
       <button
         form="checkout-form"
         type="submit"
-        className="w-full bg-custom hover:bg-yellow-400 text-black font-semibold uppercase tracking-wider py-2 rounded-[29.53px] mb-10 transition-all cursor-pointer flex justify-center"
+        className="w-full bg-custom hover:bg-yellow-400 text-black font-semibold uppercase tracking-wider py-3 rounded-[29.53px] mb-8 transition-all cursor-pointer flex justify-center"
       >
         <span className="underline underline-offset-4 decoration-black font-semibold">VALIDATE</span>
       </button>
+
+      <div className="w-full h-px bg-cart-border mb-6"></div>
 
       <div>
         <div className="flex items-center justify-between mb-7.75">
