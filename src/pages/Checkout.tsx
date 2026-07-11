@@ -9,7 +9,7 @@ interface CheckoutProps {
 
 export const Checkout = ({ cart }: CheckoutProps) => {
   return (
-    <div className="min-h-screen bg-[#30332D] text-white font-sans flex justify-center pt-32 pb-16 px-4 md:px-8 overflow-x-hidden">
+    <div className="min-h-screen bg-charcoal text-white font-sans flex justify-center pt-32 pb-16 px-4 md:px-8 overflow-x-hidden">
       <header className="max-w-415.75 mx-auto px-8 pt-8 flex justify-between items-center fixed top-0 left-0 right-0 z-20 backdrop-blur-md">
         <Link to="/" className="transition-transform duration-300 hover:scale-105">
           <img src={logo} alt="Lavis" className="w-28 h-auto" />

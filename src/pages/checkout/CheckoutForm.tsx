@@ -278,7 +278,7 @@ export const CheckoutForm = () => {
   };
 
   return (
-    <div className="flex flex-col relative w-full max-w-150 mx-auto lg:mx-0">
+    <div className="flex flex-col relative w-full max-w-150 mx-auto lg:mx-0 order-2 lg:order-1 mt-10 lg:mt-0">
       <div className="flex flex-col items-center mb-4">
         <span className="text-base font-medium text-white mb-4">Express Payment</span>
         <button className="w-full md:w-67.5 bg-custom hover:bg-yellow-400 text-black rounded-full flex items-center justify-center transition-all cursor-pointer font-semibold">

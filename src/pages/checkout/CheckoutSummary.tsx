@@ -14,7 +14,7 @@ export const CheckoutSummary = ({ cart }: CheckoutSummaryProps) => {
   const total = subtotal + shipping;
 
   return (
-    <div className="w-full mt-10 lg:mt-0 relative">
+    <div className="w-full max-w-150 mx-auto lg:max-w-none lg:mx-0 relative order-1 lg:order-2">
       <div className="bg-cart-btn rounded-[22px] py-8 px-9 sticky top-8">
         <div className="flex flex-col gap-6 mb-6">
           {displayItems.map((item, index) => (
@@ -36,7 +36,7 @@ export const CheckoutSummary = ({ cart }: CheckoutSummaryProps) => {
                     {item.qty}
                   </div>
                 </div>
-                <span className="text-sm text-white max-w-[200px] font-medium">{item.title}</span>
+                <span className="text-sm text-white max-w-50 font-medium">{item.title}</span>
               </div>
               <span className="text-sm font-medium">${(item.price * item.qty).toFixed(2)}</span>
             </div>
@@ -49,7 +49,7 @@ export const CheckoutSummary = ({ cart }: CheckoutSummaryProps) => {
             placeholder="Discount code"
             className="flex-1 bg-ash text-white p-3.5 rounded-full focus:outline-none focus:ring-1 focus:ring-custom/50 placeholder-gray-400"
           />
-          <button className="bg-[#FEEC04] underline hover:bg-stone text-black hover:text-white py-3.5 px-[30px] rounded-full transition-colors cursor-pointer font-medium">
+          <button className="bg-custom underline hover:bg-stone text-black hover:text-white py-3.5 px-7.5 rounded-full transition-colors cursor-pointer font-medium">
             APPLY
           </button>
         </div>
